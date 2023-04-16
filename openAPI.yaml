@@ -26,15 +26,19 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                username:
                   type: string
-                  example: kristain@gmail.com
+                  example: "@kristain123"
                 password:
                   type: string
                   example: qwert123
       responses:
         '200':
-          $ref: '#/components/responses/Response200'
+          description: login success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserSchema'
         '400':
           $ref: '#/components/responses/Response400'
   /users/:
@@ -43,7 +47,7 @@ paths:
         - Users
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/UsersSchema'
       responses:
@@ -83,7 +87,7 @@ paths:
           required: true
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/UsersSchema'
       responses:
@@ -112,7 +116,7 @@ paths:
         - Events
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/EventSchema'
       responses:
@@ -286,6 +290,9 @@ paths:
                     name:
                       type: string
                       example: "Robin Hood"
+                    user_pictures:
+                      type: string
+                      example: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
                     comment:
                       type: string
                       example: "I Think This is Great Event"
@@ -326,12 +333,20 @@ components:
         name:
           type: string
           example: Robin Hood
+        username:
+          type: string
+          example: "@kristain123"
         email:
           type: string
+          format: email
           example: kristain@gmail.com
         password:
           type: string
           example: qwert123
+        pictures:
+          type: string
+          format: binary
+          example: pictures.jpg
     SimpleUserSchema:
       type: object
       properties:
@@ -344,6 +359,21 @@ components:
         email:
           type: string
           example: Robinhood@gmail.com
+    LoginUserSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Robin Hood
+        username:
+          type: string
+          example: "@kristain123"
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJ1c2VySUQiOjR9.QTZxERh4CwC_UnL_eJvTi_A_qdLeBZ-IjR4nqoxjodk"
     EventSchema:
       type: object
       properties:
@@ -362,6 +392,16 @@ components:
         details:
           type: string
           example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+        category:
+          type: string
+          example: "Games"
+        price:
+          type: string
+          example: free
+        pictures:
+          type: string
+          format: binary
+          example: pictures.jpg
     ArrayOfEventSchema:
       type: array
       items:
