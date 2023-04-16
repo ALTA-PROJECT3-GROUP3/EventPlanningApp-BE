@@ -28,7 +28,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/EventPlanningApp:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/event_planning_app:latest
       - 
         name: multiple command
         uses: appleboy/ssh-action@v0.1.6
@@ -40,5 +40,5 @@ jobs:
           script: |
             docker stop ${{ secrets.CNAME }}
             docker rm ${{ secrets.CNAME }}
-            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/EventPlanningApp:alpine
-            docker run --name ${{ secrets.CNAME }} -d -p 8080:8080 --link mysqlku -e DBUSER=${{ secrets.DBUSER }} -e DBPASSWORD=${{ secrets.DBPASSWORD }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -e JWT_SECRET=${{ secrets.JWT }} -e CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} -e CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} -e CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} -e CLOUDINARY_UPLOAD_FOLDER=${{ secrets.CLOUDINARY_UPLOAD_FOLDER }} ${{ secrets.DOCKERHUB_USERNAME }}/EventPlanningApp:latest
+            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/event_planning_app:alpine
+            docker run --name ${{ secrets.CNAME }} -d -p 8080:8080 --link mysqlku -e DBUSER=${{ secrets.DBUSER }} -e DBPASSWORD=${{ secrets.DBPASSWORD }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -e JWT_SECRET=${{ secrets.JWT }} -e CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} -e CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} -e CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} -e CLOUDINARY_UPLOAD_FOLDER=${{ secrets.CLOUDINARY_UPLOAD_FOLDER }} ${{ secrets.DOCKERHUB_USERNAME }}/event_planning_app:latest
