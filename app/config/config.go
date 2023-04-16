@@ -14,6 +14,8 @@ var (
 	CloudinaryApiKey       string
 	CloudinaryApiScret     string
 	CloudinaryUploadFolder string
+	MidtransServerKey      string
+	MidtransClientKey      string
 )
 
 type AppConfig struct {
@@ -75,6 +77,15 @@ func ReadEnv() *AppConfig {
 		CloudinaryUploadFolder = val
 		isRead = false
 	}
+	if val, found := os.LookupEnv("MIDTRANS_SERVERKEY"); found {
+		MidtransServerKey = val
+		isRead = false
+	}
+
+	if val, found := os.LookupEnv("MIDTRANS_CLIENTKEY"); found {
+		MidtransClientKey = val
+		isRead = false
+	}
 
 	if isRead {
 		viper.AddConfigPath(".")
@@ -99,6 +110,9 @@ func ReadEnv() *AppConfig {
 		CloudinaryApiKey = viper.Get("CLOUDINARY_API_KEY").(string)
 		CloudinaryApiScret = viper.Get("CLOUDINARY_API_SECRET").(string)
 		CloudinaryUploadFolder = viper.Get("CLOUDINARY_UPLOAD_FOLDER").(string)
+
+		MidtransServerKey = viper.Get("MIDTRANS_SERVERKEY").(string)
+		MidtransClientKey = viper.Get("MIDTRANS_CLIENTKEY").(string)
 
 	}
 	return &app

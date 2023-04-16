@@ -34,6 +34,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/labstack/echo-jwt/v4 v4.1.0
 	github.com/magiconair/properties v1.8.7 // indirect
+	github.com/midtrans/midtrans-go v1.3.6
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
