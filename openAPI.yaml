@@ -15,21 +15,6 @@ info:
   license:
     name: APACHE 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
-  # # servers:
-  # # # Added by API Auto Mocking Plugin
-  # # # Added by API Auto Mocking Plugin
-  # # - description: SwaggerHub API Auto Mocking
-  # #   url: https://virtserver.swaggerhub.com/iswanulumam/EventPlanningApp/1.0.0
-  # - description: SwaggerHub API Auto Mocking
-  #   url: https://virtserver.swaggerhub.com/iswanulumam/RentBookApp/1.0.0
-  # - description: Server Rent a Book API
-  #   url: https://{environment}.rentbook.com/api/v1/
-  #   variables:
-  #     environment:
-  #       default: dev
-  #       enum:
-  #         - dev
-  #         - prod
 paths:
   /login:
     post:
@@ -196,7 +181,7 @@ paths:
                         type: array
                         items:
                           type: string
-                          example: "Iswanul Umam"
+                          example: "Robin Hood"
         '400':
           $ref: '#/components/responses/Response400'
     put:
@@ -300,7 +285,7 @@ paths:
                   properties:
                     name:
                       type: string
-                      example: "Iswanul"
+                      example: "Robin Hood"
                     comment:
                       type: string
                       example: "I Think This is Great Event"
@@ -340,7 +325,7 @@ components:
       properties:
         name:
           type: string
-          example: Rudy Sujarwo
+          example: Robin Hood
         email:
           type: string
           example: kristain@gmail.com
@@ -355,10 +340,10 @@ components:
           example: 1
         name:
           type: string
-          example: Rudy Sujarwo
+          example: Robin Hood
         email:
           type: string
-          example: rudy@sujarwo@gmail.com
+          example: Robinhood@gmail.com
     EventSchema:
       type: object
       properties:
