@@ -15,6 +15,11 @@ info:
   license:
     name: APACHE 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
+
+############## 
+# AUTH
+##############
+
 paths:
   /login:
     post:
@@ -38,27 +43,53 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginUserSchema'
+                $ref: '#/components/schemas/LoginUserSchema' 
         '400':
           $ref: '#/components/responses/Response400'
+        '404':
+          $ref: '#/components/responses/Response404'
+        '500':
+          $ref: '#/components/responses/Response500'
+
+############## 
+# USER
+##############
+
   /users/:
     post:
       tags:
         - Users
+      summary: Create a new user
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              $ref: '#/components/schemas/UsersSchema'
+              $ref: '#/components/schemas/RegisterUsersSchema'
       responses:
-        '200':
-          $ref: '#/components/responses/Response200'
+        '201':
+          description: insert user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 201
+                  message:
+                    type: string
+                    example: Success Create Account
         '400':
           $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
   /users/{id}:
     get:
       tags:
         - Users
+      summary: Show detail user
+      security:
+        - JWTAuth: []
       parameters:
         - in: path
           name: id
@@ -68,16 +99,21 @@ paths:
           required: true
       responses:
         '200':
-          description: get user by id
+          description: show detail user profile
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleUserSchema'
         '400':
           $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
     put:
       tags:
         - Users
+      summary: Update user data
+      security:
+        - JWTAuth: []
       parameters:
         - in: path
           name: id
@@ -89,15 +125,31 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UsersSchema'
+              $ref: '#/components/schemas/UpdateUsersSchema'
       responses:
         '200':
-          $ref: '#/components/responses/Response200'
+          description: update user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Success Update Data
         '400':
           $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
     delete:
       tags:
         - Users
+      summary: Deactive user account
+      security:
+        - JWTAuth: []
       parameters:
         - in: path
           name: id
@@ -107,26 +159,61 @@ paths:
           required: true
       responses:
         '200':
-          $ref: '#/components/responses/Response200'
+          description: deactive user account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Success Deactive User Account
         '400':
           $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
+
+############## 
+# EVENT
+##############
+
   /events:
     post:
       tags:
         - Events
+      summary: Create a new event
+      security:
+        - JWTAuth: []
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/EventSchema'
       responses:
-        '200':
-          $ref: '#/components/responses/Response200'
+        '201':
+          description: insert event data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 201
+                  message:
+                    type: string
+                    example: Success Create Event
         '400':
           $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
     get:
       tags:
         - Events
+      summary: Get all event
       parameters:
         - in: query
           name: p
@@ -140,17 +227,6 @@ paths:
           schema:
             type: number
             example: 1
-        - in: query
-          name: name
-          description: filter by name
-          schema:
-            type: string
-            example: Object Oriented Programming
-        - in: query
-          name: location
-          description: filter by location
-          schema:
-            type: string
       responses:
         '200':
           description: get all events
@@ -160,10 +236,17 @@ paths:
                 $ref: '#/components/schemas/ArrayOfEventSchema'
         '400':
           $ref: '#/components/responses/Response400'
+        '404':
+          $ref: '#/components/responses/Response404'
+        '500':
+          $ref: '#/components/responses/Response500'
   /events/{id}:
     get:
       tags:
         - Events
+      summary: Get event by id
+      security:
+        - JWTAuth: []
       parameters:
         - in: path
           name: id
@@ -177,20 +260,17 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/EventSchema'
-                  - type: object
-                    properties:
-                      participants:
-                        type: array
-                        items:
-                          type: string
-                          example: "Robin Hood"
+                  $ref: '#/components/schemas/GetEventSchema'        
         '400':
           $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
     put:
       tags:
         - Events
+      summary: Update event
+      security:
+        - JWTAuth: []
       parameters:
         - in: path
           name: id
@@ -205,54 +285,60 @@ paths:
               $ref: '#/components/schemas/EventSchema'
       responses:
         '200':
-          $ref: '#/components/responses/Response200'
-        '400':
-          $ref: '#/components/responses/Response400'
-    delete:
-      tags:
-        - Events
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: number
-            example: 1
-          required: true
-      responses:
-        '200':
-          $ref: '#/components/responses/Response200'
-        '400':
-          $ref: '#/components/responses/Response400'
-  /events/participations:
-    post:
-      tags:
-        - Event Participation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EventSchema'
-      responses:
-        '200':
-          $ref: '#/components/responses/Response200'
-        '400':
-          $ref: '#/components/responses/Response400'
-    get:
-      tags:
-        - Event Participation
-      responses:
-        '200':
-          description: get all events
+          description: update event data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfEventSchema'
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Success Update Event Data
         '400':
           $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
+    delete:
+      tags:
+        - Events
+      summary: Delete event
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+            example: 1
+          required: true
+      responses:
+        '200':
+          description: delete event
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Success Delete Event
+        '400':
+          $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
   /events/comments:
     post:
       tags:
-        - Event Participation
+        - Events
+      summary: Comment on event
+      security:
+        - JWTAuth: []
       requestBody:
         content:
           application/json:
@@ -267,54 +353,70 @@ paths:
                   example: 27
                 comment:
                   type: string
-                  example: "I think this is great event"
-                
+                  example: "I think this is great event" 
       responses:
         '200':
-          $ref: '#/components/responses/Response200'
-        '400':
-          $ref: '#/components/responses/Response400'
-    get:
-      tags:
-        - Event Participation
-      responses:
-        '200':
-          description: get all comments
+          description: comment on event
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      example: "Robin Hood"
-                    user_pictures:
-                      type: string
-                      example: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-                    comment:
-                      type: string
-                      example: "I Think This is Great Event"
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Success Create Comment
         '400':
           $ref: '#/components/responses/Response400'
-components:
-  responses:
-    Response200:
-      description: success create
-      content:
-        application/json:
+        '500':
+          $ref: '#/components/responses/Response500'
+  /myevent:
+    get:
+      tags:
+        - Events
+      summary: Get all event by user id
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: query
+          name: p
+          description: page number
           schema:
-            type: object
-            properties:
-              code:
-                type: number
-                example: 200
-              message:
-                type: string
-                example: Successful Operation
+            type: number
+            example: 1
+        - in: query
+          name: rp
+          description: record per page
+          schema:
+            type: number
+            example: 1
+      responses:
+        '200':
+          description: get all events by user id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfEventSchema'
+        '400':
+          $ref: '#/components/responses/Response400'
+        '404':
+          $ref: '#/components/responses/Response404'
+        '500':
+          $ref: '#/components/responses/Response500'
+
+
+components:
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "user token"
+  responses:
     Response400:
-      description: bad request
+      description: error from user
       content:
         application/json:
           schema:
@@ -326,16 +428,39 @@ components:
               message:
                 type: string
                 example: Bad Request
+    Response404:
+      description: data not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              message:
+                type: string
+                example: Data not found
+    Response500:
+      description: error from server
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 500
+              message:
+                type: string
+                example: Internal server error
   schemas:
-    UsersSchema:
+    UpdateUsersSchema:
       type: object
       properties:
         name:
           type: string
           example: Robin Hood
-        username:
-          type: string
-          example: "@kristain123"
         email:
           type: string
           format: email
@@ -343,22 +468,45 @@ components:
         password:
           type: string
           example: qwert123
+        address:
+          type: string
+          example: Jl. Kemana A No. 32
         pictures:
           type: string
           format: binary
           example: pictures.jpg
+    RegisterUsersSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Robin Hood
+        email:
+          type: string
+          format: email
+          example: kristain@gmail.com
+        username:
+          type: string
+          example: "@kristain123"
+        password:
+          type: string
+          example: qwert123
     SimpleUserSchema:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
         name:
           type: string
           example: Robin Hood
         email:
           type: string
           example: Robinhood@gmail.com
+        address:
+          type: string
+          example: Jl. Kemana A No. 32
+        pictures:
+          type: string
+          format: binary
+          example: https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg
     LoginUserSchema:
       type: object
       properties:
@@ -380,7 +528,7 @@ components:
         name:
           type: string
           example: "Webinar: Your Product Manager Career by PlayStation Sr PM"
-        hosted_by:
+        hosted_name:
           type: string
           example: "Product School"
         date:
@@ -389,15 +537,101 @@ components:
         location:
           type: string
           example: "Jakarta"
-        details:
-          type: string
-          example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
         category:
           type: string
           example: "Games"
         price:
           type: string
           example: free
+        quota:
+          type: integer
+          example: 20
+        details:
+          type: string
+          example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+        pictures:
+          type: string
+          format: binary
+          example: pictures.jpg
+    GetEventSchema:
+      type: array
+      items:
+        properties:
+          name:
+            type: string
+            example: "Webinar: Your Product Manager Career by PlayStation Sr PM"
+          hosted_name:
+            type: string
+            example: "Product School"
+          date:
+            type: string
+            format: date-time
+          location:
+            type: string
+            example: "Jakarta"
+          price:
+            type: string
+            example: free
+          quota:
+            type: integer
+            example: 20
+          details:
+            type: string
+            example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+          pictures:
+            type: string
+            format: binary
+            example: pictures.jpg
+          participants:
+              type: array
+              example:
+                   [
+                     {
+                       id: 1,
+                       "user_name": "kristain",
+                       "pictures": "https://kurabsent.s3.amazonaws.com/123.jpg",
+                     },
+                     {
+                       id: 2,
+                       "user_name": "yuda",
+                       "pictures": "https://kurabsent.s3.amazonaws.com/123.jpg",
+                     },
+                    ]
+          comment:
+              type: array
+              example:
+                   [
+                     {
+                       id: 1,
+                       "user_name": "kristain",
+                       "pictures": "https://kurabsent.s3.amazonaws.com/123.jpg",
+                       "comment": "I think this is great event",
+                     },
+                     {
+                       id: 2,
+                       "user_name": "yuda",
+                       "pictures": "https://kurabsent.s3.amazonaws.com/123.jpg",
+                       "comment": "I think this is good event",
+                     },
+                    ]
+    GetAllEventSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Webinar: Your Product Manager Career by PlayStation Sr PM"
+        hosted_name:
+          type: string
+          example: "Product School"
+        date:
+          type: string
+          format: date-time
+        price:
+          type: string
+          example: free
+        quota:
+          type: integer
+          example: 20
         pictures:
           type: string
           format: binary
@@ -405,4 +639,5 @@ components:
     ArrayOfEventSchema:
       type: array
       items:
-        $ref: '#/components/schemas/EventSchema'
+        $ref: '#/components/schemas/GetAllEventSchema'
+
