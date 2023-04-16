@@ -1,0 +1,383 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/CW3-ALTA/EventPlanningApp/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/CW3-ALTA/EventPlanningApp/1.0.0
+info:
+  version: 1.0.0
+  title: Event Planning App
+  contact:
+    name: Kristain Putra
+    email: kputrapar@gmail.com
+  license:
+    name: APACHE 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  # # servers:
+  # # # Added by API Auto Mocking Plugin
+  # # # Added by API Auto Mocking Plugin
+  # # - description: SwaggerHub API Auto Mocking
+  # #   url: https://virtserver.swaggerhub.com/iswanulumam/EventPlanningApp/1.0.0
+  # - description: SwaggerHub API Auto Mocking
+  #   url: https://virtserver.swaggerhub.com/iswanulumam/RentBookApp/1.0.0
+  # - description: Server Rent a Book API
+  #   url: https://{environment}.rentbook.com/api/v1/
+  #   variables:
+  #     environment:
+  #       default: dev
+  #       enum:
+  #         - dev
+  #         - prod
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: kristain@gmail.com
+                password:
+                  type: string
+                  example: qwert123
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+  /users/:
+    post:
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersSchema'
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+            example: 1
+          required: true
+      responses:
+        '200':
+          description: get user by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleUserSchema'
+        '400':
+          $ref: '#/components/responses/Response400'
+    put:
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+            example: 1
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersSchema'
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+    delete:
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+  /events:
+    post:
+      tags:
+        - Events
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventSchema'
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+    get:
+      tags:
+        - Events
+      parameters:
+        - in: query
+          name: p
+          description: page number
+          schema:
+            type: number
+            example: 1
+        - in: query
+          name: rp
+          description: record per page
+          schema:
+            type: number
+            example: 1
+        - in: query
+          name: name
+          description: filter by name
+          schema:
+            type: string
+            example: Object Oriented Programming
+        - in: query
+          name: location
+          description: filter by location
+          schema:
+            type: string
+      responses:
+        '200':
+          description: get all events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfEventSchema'
+        '400':
+          $ref: '#/components/responses/Response400'
+  /events/{id}:
+    get:
+      tags:
+        - Events
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+            example: 1
+          required: true
+      responses:
+        '200':
+          description: get  events
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/EventSchema'
+                  - type: object
+                    properties:
+                      participants:
+                        type: array
+                        items:
+                          type: string
+                          example: "Iswanul Umam"
+        '400':
+          $ref: '#/components/responses/Response400'
+    put:
+      tags:
+        - Events
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+            example: 1
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventSchema'
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+    delete:
+      tags:
+        - Events
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+  /events/participations:
+    post:
+      tags:
+        - Event Participation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventSchema'
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+    get:
+      tags:
+        - Event Participation
+      responses:
+        '200':
+          description: get all events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfEventSchema'
+        '400':
+          $ref: '#/components/responses/Response400'
+  /events/comments:
+    post:
+      tags:
+        - Event Participation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: integer
+                  example: 12
+                user_id:
+                  type: integer
+                  example: 27
+                comment:
+                  type: string
+                  example: "I think this is great event"
+                
+      responses:
+        '200':
+          $ref: '#/components/responses/Response200'
+        '400':
+          $ref: '#/components/responses/Response400'
+    get:
+      tags:
+        - Event Participation
+      responses:
+        '200':
+          description: get all comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "Iswanul"
+                    comment:
+                      type: string
+                      example: "I Think This is Great Event"
+        '400':
+          $ref: '#/components/responses/Response400'
+components:
+  responses:
+    Response200:
+      description: success create
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              message:
+                type: string
+                example: Successful Operation
+    Response400:
+      description: bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              message:
+                type: string
+                example: Bad Request
+  schemas:
+    UsersSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Rudy Sujarwo
+        email:
+          type: string
+          example: kristain@gmail.com
+        password:
+          type: string
+          example: qwert123
+    SimpleUserSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Rudy Sujarwo
+        email:
+          type: string
+          example: rudy@sujarwo@gmail.com
+    EventSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Webinar: Your Product Manager Career by PlayStation Sr PM"
+        hosted_by:
+          type: string
+          example: "Product School"
+        date:
+          type: string
+          format: date-time
+        location:
+          type: string
+          example: "Jakarta"
+        details:
+          type: string
+          example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    ArrayOfEventSchema:
+      type: array
+      items:
+        $ref: '#/components/schemas/EventSchema'
