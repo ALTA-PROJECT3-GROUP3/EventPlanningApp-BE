@@ -1,11 +1,9 @@
-FROM golang:alpine
+FROM golang:alpine as builder
+WORKDIR /app/
+COPY . .
+RUN go build -o /app/main /app/main.go
 
-RUN mkdir /app
-
-WORKDIR /app
-
-ADD . /app
-
-RUN go build -o main .
-
-CMD ["/app/main"]
+FROM alpine:latest
+WORKDIR /app/
+COPY --from=builder /app/ /app/
+ENTRYPOINT ["/app/main"]
