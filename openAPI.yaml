@@ -508,7 +508,46 @@ paths:
 ############## 
 # RESERVATION
 ##############
-
+  /check:
+    post:
+      tags:
+        - Reservations
+      summary: "Cek Ketersediaan"
+      description: "Cek Ketersediaan"
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_id:
+                  type: integer
+                date:
+                  type: string
+                quota:
+                  type: string
+            example:
+              room_id: 1
+              date: "2023-03-13"
+              quota: 1
+      responses:
+        '201':
+          description: "success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  availability: true
+                message: "event available"
+        '400':
+          $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
   /reservations:
     post:
       tags:
@@ -540,7 +579,7 @@ paths:
                 $ref: "#/components/schemas/responseObject"
               example:
                 data:
-                  order_id: "HAPP-1679023702077060300"
+                  order_id: "EPPA-1679023702077060300"
                   redirect_url: "https://app.sandbox.midtrans.com/snap/v3/redirection/a7cd4588-1853-43a5-b23a-80fb26d161ff"
                 message: "reservation success, waiting for payment"
         '400':
