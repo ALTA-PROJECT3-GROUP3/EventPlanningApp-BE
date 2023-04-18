@@ -486,19 +486,12 @@ paths:
 ############## 
 # RESERVATION
 ##############
-  /reservations/{event_id}:
+  /reservations:
     post:
       tags:
         - Reservations
       summary: "Join an event"
       description: "Insert data payment for reservation"
-      parameters:
-        - name: event_id
-          description: event_id to join the event
-          required: true
-          in: path
-          schema:
-            type: integer
       security:
         - JWTAuth: []
       requestBody:
@@ -506,19 +499,19 @@ paths:
         content:
           application/json:
             schema:
-                type: array
-                items:
-                    type: object
-                    properties:
-                      ticket_name:
+                type: object
+                properties:
+                      event_id:
                         type: string
-                        example: VIP
-                      quantity:
-                        type: integer
-                        example: 5
+                        example: 1
+                      tickets:
+                          - name : ticket_id
+                            
+                          - quantity:
+
       responses:
-        '200':
-          description: booked event
+        '201':
+          description: succes to book event
           content:
             application/json:
               schema:
@@ -526,8 +519,17 @@ paths:
                 properties:
                   data:
                     type: object
-                    properties:
-                      reservation_id:
+                    properties: 
+                      payment_type:
+                        type: string
+                        example: "back_transfer"
+                      bank:
+                        type: string
+                        example: bca
+                      phone:
+                        type: string
+                        example: 081223536464
+                      payment_id:
                         type: integer
                         example: 1
                   code:
@@ -540,74 +542,10 @@ paths:
           $ref: '#/components/responses/Response400'
         '500':
           $ref: '#/components/responses/Response500'    
-  /reservations/payment/{reservation_id}:
-    post:
-      tags: 
-        - Reservations
-      summary: makes payment for booked event
-      parameters:
-        - name: reservation_id
-          description: reservation that has been join the event
-          required: true
-          in: path
-          schema:
-            type: integer
-      security:
-        -  JWTAuth: []
-      requestBody:
-          required: true
-          content: 
-            application/json:
-              schema:
-                type: object
-                properties:
-                  payment_type:
-                    type: string
-                    example: "back_transfer"
-                  bank:
-                    type: string
-                    example: bca
-                  cust_payment_detais:
-                    type: object
-                    properties:
-                      email:
-                        type: string
-                        format: email
-                        example: norely@example.com
-                      first_name:
-                        type: string
-                        example: "budi"
-                      last_name:
-                        type: string
-                        example: "utomo"
-                      phone:
-                        type: string
-                        example: 081223536464
-                  payment_id:
-                    type: integer
-                    example: 1
-      responses:
-        '200':
-          description: to create charge
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: succes to create payment charge
-        '400':
-          $ref: '#/components/responses/Response400'
-        '500':
-          $ref: '#/components/responses/Response500'
-  /reservations/payment/details/{payment_id}:
+  /payment/{payment_id}:
     get:
       tags:
-        - Reservations
+        - Payments
       summary: makes payment for charged event
       security:
         -  JWTAuth: []
