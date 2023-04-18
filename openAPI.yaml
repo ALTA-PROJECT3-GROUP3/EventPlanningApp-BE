@@ -48,6 +48,7 @@ paths:
                   name: "Robin Hood"
                   username: "@kristain123"
                   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJ1c2VySUQiOjR9.QTZxERh4CwC_UnL_eJvTi_A_qdLeBZ-IjR4nqoxjodk"
+                code: 200
                 message: "login success"
         '400':
           $ref: '#/components/responses/Response400'
@@ -59,7 +60,6 @@ paths:
 ############## 
 # USER
 ##############
-
   /users:
     post:
       tags:
@@ -72,7 +72,7 @@ paths:
               $ref: '#/components/schemas/RegisterUsersSchema'
       responses:
         '201':
-          description: insert user data
+          description: succes insert user data
           content:
             application/json:
               schema:
@@ -115,6 +115,7 @@ paths:
                   email: "Robinhood@gmail.com"
                   address: "Jl. Kemana A No. 32"
                   pictures: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+                code: 200
                 message: "success show profile"
         '400':
           $ref: '#/components/responses/Response400'
@@ -191,7 +192,6 @@ paths:
 ############## 
 # EVENT
 ##############
-
   /events:
     post:
       tags:
@@ -238,7 +238,7 @@ paths:
           description: record per page
           schema:
             type: number
-            example: 1
+            example: 10
       responses:
         '200':
           description: get all events
@@ -247,27 +247,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/responseObject'
               example:
-                data: 
-                 [
-                  {
-                    id: 1,
-                    name: "Webinar: Your Product Manager Career by PlayStation Sr PM",
-                    hosted_name: "Product School",
-                    date: date-time,
-                    price: "50000",
-                    quota: 20,
-                    pictures: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-                  },
-                  {
-                    id: 2,
-                    name: "Webinar: Work training center",
-                    hosted_name": "Government",
-                    date: date-time,
-                    price: "free",
-                    quota: 100,
-                    pictures: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-                  }
-                 ]
+                data:
+                - id: 1
+                  name: "Webinar: Your Product Manager Career by PlayStation Sr PM"
+                  host_name: "Product School"
+                  date: 2023-05-01T10:00:00Z
+                  price: 50000
+                  quota: 20
+                  pictures: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+                - id: 2
+                  name: "Webinar: Work training center"
+                  host_name: "Government"
+                  date: 2023-05-15T14:00:00Z
+                  price: free
+                  quota: 100
+                  pictures: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+                code: 200
                 message: "success show all event"
         '400':
           $ref: '#/components/responses/Response400'
@@ -275,7 +270,7 @@ paths:
           $ref: '#/components/responses/Response404'
         '500':
           $ref: '#/components/responses/Response500'
-  /events/{id}:
+  /events/{event_id}:
     get:
       tags:
         - Events
@@ -284,7 +279,7 @@ paths:
         - JWTAuth: []
       parameters:
         - in: path
-          name: id
+          name: event_id
           schema:
             type: number
             example: 1
@@ -299,40 +294,30 @@ paths:
               example:
                 data:
                   name: "Webinar: Your Product Manager Career by PlayStation Sr PM"
-                  hosted_name: "Product School"
+                  host_name: "Product School"
                   date: date-time
                   location: "Jakarta"
-                  price: "free"
+                  is_paid: false
                   quota: 20
                   details: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                   participants:
-                       [
-                         {
-                           id: 1,
-                           "user_name": "kristain",
-                           "pictures": "https://kurabsent.s3.amazonaws.com/123.jpg",
-                         },
-                         {
-                           id: 2,
-                           "user_name": "yuda",
-                           "pictures": "https://kurabsent.s3.amazonaws.com/123.jpg",
-                         },
-                       ]
-                  comment:
-                       [
-                        {
-                          id: 1,
-                          "user_name": "kristain",
-                          "pictures": "https://kurabsent.s3.amazonaws.com/123.jpg",
-                          "comment": "I think this is great event",
-                        },
-                        {
-                          id: 2,
-                          "user_name": "yuda",
-                          "pictures": "https://kurabsent.s3.amazonaws.com/123.jpg",
-                          "comment": "I think this is good event",
-                        },
-                       ]
+                      - id: 1
+                        user_name: kristain
+                        pictures: https://kurabsent.s3.amazonaws.com/123.jpg
+                      - id: 2
+                        user_name: yuda
+                        pictures: https://kurabsent.s3.amazonaws.com/123.jpg
+                  comments:
+                      - id: 1
+                        user_name: kristain
+                        pictures: https://kurabsent.s3.amazonaws.com/123.jpg
+                        comment: I think this is great event
+
+                      - id: 2
+                        user_name: yuda
+                        pictures: https://kurabsent.s3.amazonaws.com/123.jpg
+                        comment: I think this is good event
+                code: 200
                 message: "success get event by id"
         '400':
           $ref: '#/components/responses/Response400'
@@ -346,14 +331,14 @@ paths:
         - JWTAuth: []
       parameters:
         - in: path
-          name: id
+          name: event_id
           schema:
             type: number
             example: 1
           required: true
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/EventSchema'
       responses:
@@ -382,7 +367,7 @@ paths:
         - JWTAuth: []
       parameters:
         - in: path
-          name: id
+          name: event_id
           schema:
             type: number
             example: 1
@@ -424,7 +409,7 @@ paths:
           description: record per page
           schema:
             type: number
-            example: 1
+            example: 10
       responses:
         '200':
           description: get all events by user id
@@ -433,29 +418,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/responseObject'
               example:
-                data: 
-                 [
-                  {
-                    id: 1,
-                    name: "Webinar: Your Product Manager Career by PlayStation Sr PM",
-                    hosted_name: "Product School",
-                    date: date-time,
-                    price: "50000",
-                    quota: 20,
+                data:
+                  - id: 1
+                    name: "Webinar: Your Product Manager Career by PlayStation Sr PM"
+                    hosted_name: "Product School"
+                    date: 2023-05-01T10:00:00Z
+                    price: 50000
+                    quota: 20
                     pictures: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-                  },
-                  {
-                    id: 2,
-                    name: "Webinar: Work training center",
-                    hosted_name": "Government",
-                    date: date-time,
-                    price: "free",
-                    quota: 100,
+                  - id: 2
+                    name: "Webinar: Work training center"
+                    hosted_name: "Government"
+                    date: 2023-05-15T14:00:00Z
+                    price: free
+                    quota: 100
                     pictures: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
-                  }
-                 ]
+                code: 200
                 message: "success show all event"
-              
         '400':
           $ref: '#/components/responses/Response400'
         '404':
@@ -466,7 +445,6 @@ paths:
 ############## 
 # COMMENT
 ##############
-
   /comments:
     post:
       tags:
@@ -508,52 +486,19 @@ paths:
 ############## 
 # RESERVATION
 ##############
-  /check:
+  /reservations/{event_id}:
     post:
       tags:
         - Reservations
-      summary: "Cek Ketersediaan"
-      description: "Cek Ketersediaan"
-      security:
-        - JWTAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                event_id:
-                  type: integer
-                date:
-                  type: string
-                quota:
-                  type: string
-            example:
-              room_id: 1
-              date: "2023-03-13"
-              quota: 1
-      responses:
-        '201':
-          description: "success"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/responseObject"
-              example:
-                data:
-                  availability: true
-                message: "event available"
-        '400':
-          $ref: '#/components/responses/Response400'
-        '500':
-          $ref: '#/components/responses/Response500'
-  /reservations:
-    post:
-      tags:
-        - Reservations
-      summary: "Create reservation payment"
+      summary: "Join an event"
       description: "Insert data payment for reservation"
+      parameters:
+        - name: event_id
+          description: event_id to join the event
+          required: true
+          in: path
+          schema:
+            type: integer
       security:
         - JWTAuth: []
       requestBody:
@@ -561,64 +506,155 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                event_id:
-                  type: integer
-                event_quota:
-                  type: integer
-            example:
-              event_id: 1
-              event_quota: 2
+                type: array
+                items:
+                    type: object
+                    properties:
+                      ticket_name:
+                        type: string
+                        example: VIP
+                      quantity:
+                        type: integer
+                        example: 5
       responses:
         '200':
-          description: "success"
+          description: booked event
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/responseObject"
-              example:
-                data:
-                  order_id: "EPPA-1679023702077060300"
-                  redirect_url: "https://app.sandbox.midtrans.com/snap/v3/redirection/a7cd4588-1853-43a5-b23a-80fb26d161ff"
-                message: "reservation success, waiting for payment"
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      reservation_id:
+                        type: integer
+                        example: 1
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Succes to join event
+        '400':
+          $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'    
+  /reservations/payment/{reservation_id}:
+    post:
+      tags: 
+        - Reservations
+      summary: makes payment for booked event
+      parameters:
+        - name: reservation_id
+          description: reservation that has been join the event
+          required: true
+          in: path
+          schema:
+            type: integer
+      security:
+        -  JWTAuth: []
+      requestBody:
+          required: true
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_type:
+                    type: string
+                    example: "back_transfer"
+                  bank:
+                    type: string
+                    example: bca
+                  cust_payment_detais:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        example: norely@example.com
+                      first_name:
+                        type: string
+                        example: "budi"
+                      last_name:
+                        type: string
+                        example: "utomo"
+                      phone:
+                        type: string
+                        example: 081223536464
+                  payment_id:
+                    type: integer
+                    example: 1
+      responses:
+        '200':
+          description: to create charge
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: succes to create payment charge
         '400':
           $ref: '#/components/responses/Response400'
         '500':
           $ref: '#/components/responses/Response500'
-  /paystatus:
-    post:
+  /reservations/payment/details/{payment_id}:
+    get:
       tags:
         - Reservations
-      summary: "Payment Status"
-      description: "Cek status pembayaran di Midtrans"
+      summary: makes payment for charged event
       security:
-        - JWTAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Reservation"
-            example:
-              order_id: "HAPP-1678981182881336700"
+        -  JWTAuth: []
+      parameters:
+        - name: payment_id
+          description: event_id to join the event
+          required: true
+          in: path
+          schema:
+            type: integer
       responses:
         '200':
-          description: "success"
+          description: to get 
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/responseObject"
-              example:
-                data:
-                  order_id: "HAPP-1678981182881336700"
-                  payment_status: "success"
-                message: "reservation success, waiting for payment"
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      invoice_date:
+                        type: string
+                        format: date
+                        example: 23/04/2023
+                      event_name:
+                        type: string
+                        example: Level Up Your Business Through SEO
+                      ticket_name:
+                        type: string
+                        example: reguler
+                      status:
+                        type: string
+                        example: pending
+                      total_price:
+                        type: integer
+                        example: 2000000
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: succes to create payment charge
         '400':
           $ref: '#/components/responses/Response400'
         '500':
           $ref: '#/components/responses/Response500'
-
 components:
   securitySchemes:
     JWTAuth:
@@ -672,6 +708,8 @@ components:
       properties:
         data:
           type: object
+        code:
+          type: number
         message:
           type: string
     UpdateUsersSchema:
@@ -712,11 +750,18 @@ components:
           example: qwert123
     EventSchema:
       type: object
+      required:
+        - name
+        - date
+        - location
+        - host_name
+        - quota
+        - details
       properties:
         name:
           type: string
           example: "Webinar: Your Product Manager Career by PlayStation Sr PM"
-        hosted_name:
+        host_name:
           type: string
           example: "Product School"
         date:
@@ -725,12 +770,10 @@ components:
         location:
           type: string
           example: "Jakarta"
-        category:
-          type: string
-          example: "Games"
-        price:
-          type: string
-          example: free
+        is_paid:
+          type: boolean
+          default: false
+          example: true
         quota:
           type: integer
           example: 20
@@ -741,116 +784,3 @@ components:
           type: string
           format: binary
           example: pictures.jpg
-    GetAllEventSchema:
-      type: object
-      properties:
-        name:
-          type: string
-          example: "Webinar: Your Product Manager Career by PlayStation Sr PM"
-        hosted_name:
-          type: string
-          example: "Product School"
-        date:
-          type: string
-          format: date-time
-        price:
-          type: string
-          example: free
-        quota:
-          type: integer
-          example: 20
-        pictures:
-          type: string
-          format: binary
-          example: pictures.jpg
-    Reservation:
-      type: object
-      required:
-        - room_id
-        - payment_id
-        - date_start
-        - date_end
-        - duration
-        - total_price
-        - status
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the reservation
-        room_id:
-          type: integer
-          format: int64
-          description: The ID of the Room
-        payment_id:
-          type: integer
-          format: int64
-          description: The ID of the Payment
-        date_start:
-          type: string
-          format: date
-          description: Start date
-        date_end:
-          type: string
-          format: date
-          description: End date
-        status:
-          type: string
-          description: Accept,Cancel,Done
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time the team was created
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time the team was last updated
-        deleted_at:
-          type: string
-          format: date-time
-          description: The date and time the team was deleted
-    
-    Payment:
-      type: object
-      required:
-        - type
-        - name
-        - number
-        - cvv
-        - month
-        - year
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the reservation
-        type:
-          type: string
-          description: type
-        name:
-          type: string
-          description: name
-        number:
-          type: string
-          description: type
-        cvv:
-          type: string
-          description: name
-        month:
-          type: string
-          description: type
-        year:
-          type: string
-          description: name
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time the team was created
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time the team was last updated
-        deleted_at:
-          type: string
-          format: date-time
-          description: The date and time the team was deleted
