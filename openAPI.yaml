@@ -312,11 +312,15 @@ paths:
                         user_name: kristain
                         pictures: https://kurabsent.s3.amazonaws.com/123.jpg
                         comment: I think this is great event
-
                       - id: 2
                         user_name: yuda
                         pictures: https://kurabsent.s3.amazonaws.com/123.jpg
                         comment: I think this is good event
+                  tickets:
+                      - ticket_id: 1
+                        quota: 2
+                      - ticket_id: 2
+                        quota: 3
                 code: 200
                 message: "success get event by id"
         '400':
@@ -507,19 +511,12 @@ paths:
                       tickets:
                         type: array
                         example:
-                        - ticket_id: 1
-                          quantity: 2
-                        - ticket_id: 3
-                          quantity: 8
-                      payment_type:
-                        type: string
-                        example: bank_transfer
-                      bank:
-                        type: string
-                        example: bca
-                      phone:
-                        type: string
-                        example: 081223536464
+                          - ticket_id: 1
+                            quantity: 2
+                          - ticket_id: 1
+                            quantity: 2
+                          - quantity:
+
       responses:
         '201':
           description: succes to book event
@@ -531,12 +528,21 @@ paths:
                   data:
                     type: object
                     properties: 
+                      payment_type:
+                        type: string
+                        example: "back_transfer"
+                      bank:
+                        type: string
+                        example: bca
+                      phone:
+                        type: string
+                        example: 081223536464
                       payment_id:
                         type: integer
                         example: 1
                   code:
                     type: number
-                    example: 201
+                    example: 200
                   message:
                     type: string
                     example: Succes to join event
