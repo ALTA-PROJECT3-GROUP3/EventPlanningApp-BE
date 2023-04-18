@@ -300,6 +300,11 @@ paths:
                   is_paid: false
                   quota: 20
                   details: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                  tickets:
+                      - ticket_id: 1
+                        quota: 2
+                      - ticket_id: 2
+                        quota: 3
                   participants:
                       - id: 1
                         user_name: kristain
@@ -316,11 +321,6 @@ paths:
                         user_name: yuda
                         pictures: https://kurabsent.s3.amazonaws.com/123.jpg
                         comment: I think this is good event
-                  tickets:
-                      - ticket_id: 1
-                        quota: 2
-                      - ticket_id: 2
-                        quota: 3
                 code: 200
                 message: "success get event by id"
         '400':
@@ -701,8 +701,9 @@ components:
         - date
         - location
         - host_name
-        - quota
+        - tickets
         - details
+        - pictures
       properties:
         name:
           type: string
@@ -720,9 +721,31 @@ components:
           type: boolean
           default: false
           example: true
-        quota:
-          type: integer
-          example: 20
+        tickets:
+          type: array
+          items: 
+            type: object
+            required:
+              - ticket_name
+              - quota
+              - price
+            properties:
+              ticket_name:
+                type: string
+              quota:
+                type: integer
+              price: 
+                type: integer
+          example:
+            - ticket_name: VVIP
+              quota: 20
+              price: 50000
+            - ticket_name: VIP
+              quota: 10
+              price: 30000 
+            - ticket_name: REGULER
+              quota: 5
+              price: 10000
         details:
           type: string
           example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
