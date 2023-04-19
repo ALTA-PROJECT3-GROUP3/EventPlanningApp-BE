@@ -65,3 +65,13 @@ func (um *userModel) Login(username string, password string) (user.Core, error) 
 		Username: inputUser.Username,
 	}, nil
 }
+
+func (um *userModel) GetUserById(id uint) (user.Core, error) {
+	var res user.Core
+	if err := um.db.Table("users").Select("name, email, pictures").Where("id = ?", id).First(&res).Error; err != nil {
+		log.Error("error occurs in finding user profile", err.Error())
+		return user.Core{}, err
+	}
+
+	return res, nil
+}
