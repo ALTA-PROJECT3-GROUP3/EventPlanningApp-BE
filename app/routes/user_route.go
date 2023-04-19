@@ -12,6 +12,6 @@ func UserRoutes(e *echo.Echo, uc user.Handler) {
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
 
+	e.POST("/login", uc.LoginHandler())
 	e.POST("/users", uc.RegisterHandler())
-
 }
