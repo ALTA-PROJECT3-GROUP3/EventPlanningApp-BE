@@ -12,8 +12,8 @@ type User struct {
 	Name     string `gorm:"type:varchar(50);not null"`
 	Username string `gorm:"type:varchar(50);unique;not null"`
 	Email    string `gorm:"type:varchar(50);unique;not null"`
-	Password string `gorm:"type:varchar(50);not null"`
-	Pictures string `gorm:"type:text"`
+	Password string `gorm:"type:varchar(255);not null"`
+	Picture  string `gorm:"type:text"`
 	Events   []eRepo.Event
 	Comments []cRepo.Comment
 	Payments []pRepo.Payment
