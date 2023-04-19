@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/user"
@@ -75,5 +76,33 @@ func (uc *userController) LoginHandler() echo.HandlerFunc {
 		data.Token = token
 
 		return c.JSON(helper.ResponseFormat(http.StatusOK, "succes login!", data))
+	}
+}
+
+func (uc *userController) UserProfileHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var data = new(GetUserByIdResponsestruct)
+		userId := helper.DecodeToken(c)
+		if userId == 0 {
+			c.Logger().Error("decode token is blank")
+			return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "jwt invalid", nil))
+		}
+
+		userPath, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.Logger().Error("cannot use path param", err.Error())
+			return c.JSON(helper.ResponseFormat(http.StatusNotFound, "path invalid", nil))
+		}
+		result, err := uc.service.UserProfileLogic(uint(userPath))
+		if err != nil {
+			c.Logger().Error("error on calling userpofilelogic")
+			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "server error", nil))
+		}
+
+		data.Email = result.Email
+		data.Name = result.Name
+		data.Pictures = result.Picture
+
+		return c.JSON(helper.ResponseFormat(http.StatusOK, "succes to check user profile", data))
 	}
 }

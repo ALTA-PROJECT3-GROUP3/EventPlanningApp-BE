@@ -47,3 +47,13 @@ func (ul userLogic) LogInLogic(username string, password string) (user.Core, err
 
 	return res, nil
 }
+
+func (ul userLogic) UserProfileLogic(id uint) (user.Core, error) {
+	result, err := ul.u.GetUserById(id)
+	if err != nil {
+		log.Error("failed to find user", err.Error())
+		return user.Core{}, errors.New("terjadi permasalahan server")
+	}
+
+	return result, nil
+}
