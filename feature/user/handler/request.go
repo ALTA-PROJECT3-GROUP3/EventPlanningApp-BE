@@ -13,3 +13,8 @@ type UpdateInput struct {
 	Password string `json:"password"`
 	Pictures string `json:"pictures"`
 }
+
+type LoginInput struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

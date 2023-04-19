@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/user"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/utils/helper"
 	"github.com/labstack/gommon/log"
@@ -37,4 +39,29 @@ func (um *userModel) InsertUser(newUser user.Core) error {
 	}
 
 	return nil
+}
+
+func (um *userModel) Login(username string, password string) (user.Core, error) {
+	inputUser := User{}
+
+	if username == "" {
+		log.Error("username login is blank")
+		return user.Core{}, errors.New("data does not exist")
+	}
+
+	if err := um.db.Where("username = ?", username).First(&inputUser).Error; err != nil {
+		log.Error("error occurs on select users login", err.Error())
+		return user.Core{}, err
+	}
+
+	if err := helper.VerifyPassword(inputUser.Password, password); err != nil {
+		log.Error("user input for password is wrong", err.Error())
+		return user.Core{}, errors.New("wrong password")
+	}
+
+	return user.Core{
+		ID:       inputUser.Model.ID,
+		Name:     inputUser.Name,
+		Username: inputUser.Username,
+	}, nil
 }
