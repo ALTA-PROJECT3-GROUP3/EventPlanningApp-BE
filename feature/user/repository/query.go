@@ -75,3 +75,18 @@ func (um *userModel) GetUserById(id uint) (user.Core, error) {
 
 	return res, nil
 }
+
+func (um *userModel) DeleteUser(id uint) error {
+	userToDelete := &User{}
+	if err := um.db.First(userToDelete, id).Error; err != nil {
+		log.Error("Error in finding user id")
+		return errors.New("error in finding user")
+	}
+
+	if err := um.db.Delete(userToDelete).Error; err != nil {
+		log.Error("cannot deleete user")
+		return err
+	}
+
+	return nil
+}
