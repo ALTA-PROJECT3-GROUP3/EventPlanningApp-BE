@@ -69,7 +69,7 @@ func (um *userModel) Login(username string, password string) (user.Core, error) 
 
 func (um *userModel) GetUserById(id uint) (user.Core, error) {
 	var res user.Core
-	if err := um.db.Table("users").Select("name, email, pictures").Where("id = ?", id).First(&res).Error; err != nil {
+	if err := um.db.Table("users").Select("name, email, picture").Where("id = ?", id).First(&res).Error; err != nil {
 		log.Error("error occurs in finding user profile", err.Error())
 		return user.Core{}, err
 	}
@@ -100,8 +100,8 @@ func (um *userModel) UpdateProfile(id uint, name string, email string, password 
 			log.Errorf("error occurs on open picture %v", err)
 			return errors.New("error on open picture")
 		}
-
-		uploadURL, err := helper.UploadFile(file, "/users")
+		defer file.Close()
+		uploadURL, err := helper.UploadFile(&file, "/users")
 		if err != nil {
 			log.Errorf("error occurs on uploadFile in path %v", err)
 			return errors.New("error on upload file in path")
@@ -120,7 +120,7 @@ func (um *userModel) UpdateProfile(id uint, name string, email string, password 
 	UpdateUser.Email = email
 	UpdateUser.Password = hashedPassword
 
-	tx := um.db.Where("id = ?", id).First(&UpdateUser)
+	tx := um.db.Model(&User{}).Where("id = ?", id).Updates(&UpdateUser)
 	if tx.RowsAffected < 1 {
 		log.Error("there is no column to change on update user")
 		return errors.New("no data affected")
