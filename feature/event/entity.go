@@ -9,13 +9,13 @@ import (
 
 type Core struct {
 	Id          uint
-	Name        string
-	HostName    string
-	Description string
-	Date        time.Time
-	Location    string
+	Name        string    `validate:"required"`
+	HostName    string    `validate:"required"`
+	Description string    `validate:"required"`
+	Date        time.Time `validate:"required"`
+	Location    string    `validate:"required"`
 	IsPaid      bool
-	Pictures    string
+	Pictures    string `validate:"required"`
 	UserID      uint
 }
 
