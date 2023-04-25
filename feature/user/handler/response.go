@@ -1,6 +1,6 @@
 package handler
 
-type GetUserByIdResponsestruct struct {
+type GetUserByIdResponse struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Pictures string `json:"pictrures"`

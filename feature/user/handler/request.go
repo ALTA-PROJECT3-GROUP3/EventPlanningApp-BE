@@ -1,5 +1,7 @@
 package handler
 
+import "mime/multipart"
+
 type RegisterInput struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
@@ -17,4 +19,12 @@ type UpdateInput struct {
 type LoginInput struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+}
+
+type InputUpdateProfile struct {
+	ID       uint                  `json:"id"`
+	Name     string                `json:"name"`
+	Email    string                `json:"email"`
+	Password string                `json:"password"`
+	Pictures *multipart.FileHeader `json:"pictures"`
 }

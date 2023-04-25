@@ -17,4 +17,5 @@ func UserRoutes(e *echo.Echo, uc user.Handler) {
 	e.POST("/users", uc.RegisterHandler())
 	e.GET("/users/:id", uc.UserProfileHandler(), helper.JWTMiddleware())
 	e.DELETE("/users/:id", uc.DeleteUserHandler(), helper.JWTMiddleware())
+	e.PUT("/users/:id", uc.UpdateProfileHandler(), helper.JWTMiddleware())
 }

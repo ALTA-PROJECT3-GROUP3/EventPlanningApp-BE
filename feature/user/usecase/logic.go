@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"mime/multipart"
 	"strings"
 
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/user"
@@ -70,6 +71,27 @@ func (ul userLogic) DeleteUserLogic(id uint) error {
 			return errors.New("internal server error, cannot delete user")
 		}
 		log.Error("error in delete user (else)")
+		return err
+	}
+	return nil
+}
+
+func (ul *userLogic) UpdateProfileLogic(id uint, name string, email string, password string, picture *multipart.FileHeader) error {
+	if err := ul.u.UpdateProfile(id, name, email, password, picture); err != nil {
+		log.Error("failed on calling updateprofile query")
+		if strings.Contains(err.Error(), "open") {
+			log.Error("errors occurs on opening picture file")
+			return errors.New("user photo are not allowed")
+		} else if strings.Contains(err.Error(), "upload file in path") {
+			log.Error("upload file in path are error")
+			return errors.New("cannot upload file in path")
+		} else if strings.Contains(err.Error(), "hashing password") {
+			log.Error("hashing password error")
+			return errors.New("is invalid")
+		} else if strings.Contains(err.Error(), "affected") {
+			log.Error("no rows affected on update user")
+			return errors.New("data is up to date")
+		}
 		return err
 	}
 	return nil
