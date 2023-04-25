@@ -3,7 +3,7 @@ package usecase
 import (
 	"mime/multipart"
 
-	event "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/events"
+	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/utils/helper"
 	"github.com/go-playground/validator/v10"
 )
@@ -36,7 +36,7 @@ func (uc *eventLogic) Add(newEvent event.Core, file *multipart.FileHeader) error
 		newEvent.Pictures = uploadURL[0]
 	}
 
-	errInsert := uc.vld.Insert(newEvent)
+	errInsert := uc.data.Insert(newEvent)
 	if errInsert != nil {
 		return errInsert
 	}
