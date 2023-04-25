@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -81,7 +82,7 @@ func (uc *userController) LoginHandler() echo.HandlerFunc {
 
 func (uc *userController) UserProfileHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var data = new(GetUserByIdResponsestruct)
+		var data = new(GetUserByIdResponse)
 		userId := helper.DecodeToken(c)
 		if userId == 0 {
 			c.Logger().Error("decode token is blank")
@@ -144,5 +145,56 @@ func (uc *userController) DeleteUserHandler() echo.HandlerFunc {
 		}
 
 		return c.JSON(helper.ResponseFormat(http.StatusOK, "succes to delete user", nil))
+	}
+}
+
+func (uc *userController) UpdateProfileHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var updateInput InputUpdateProfile
+		userId := helper.DecodeToken(c)
+		if userId == 0 {
+			c.Logger().Error("decode token is blank")
+			return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "jwt invalid", nil))
+		}
+		userPath, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.Logger().Error("cannot use path param", err.Error())
+			return c.JSON(helper.ResponseFormat(http.StatusNotFound, "path invalid", nil))
+		}
+
+		if userId != uint(userPath) {
+			c.Logger().Error("userpath is not equal with userId")
+			return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "user are not authorized to delete other user account", nil))
+		}
+		updateInput.ID = uint(userPath)
+		updateInput.Name = c.FormValue("name")
+		updateInput.Email = c.FormValue("email")
+		updateInput.Password = c.FormValue("password")
+		updateInput.Pictures, err = c.FormFile("pictures")
+		if err != nil {
+			log.Println("error occurs on reading form image")
+			return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "error from reading picture file", nil))
+		}
+
+		if err := uc.service.UpdateProfileLogic(updateInput.ID, updateInput.Name, updateInput.Email, updateInput.Password, updateInput.Pictures); err != nil {
+			c.Logger().Error("failed on calling updateprofile log")
+			if strings.Contains(err.Error(), "open") {
+				c.Logger().Error("errors occurs on opening picture file")
+				return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "error on opening picture", nil))
+			} else if strings.Contains(err.Error(), "upload file in path") {
+				c.Logger().Error("upload file in path are error")
+				return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "error upload image", nil))
+			} else if strings.Contains(err.Error(), "hashing password") {
+				c.Logger().Error("hashing password error")
+				return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "new password are invalid", nil))
+			} else if strings.Contains(err.Error(), "affected") {
+				c.Logger().Error("no rows affected on update user")
+				return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "data is up to date", nil))
+			}
+
+			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "internal server error", nil))
+		}
+
+		return c.JSON(helper.ResponseFormat(http.StatusOK, "succes to update user data", nil))
 	}
 }

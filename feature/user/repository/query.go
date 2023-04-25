@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"mime/multipart"
 
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/user"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/utils/helper"
@@ -68,7 +69,7 @@ func (um *userModel) Login(username string, password string) (user.Core, error) 
 
 func (um *userModel) GetUserById(id uint) (user.Core, error) {
 	var res user.Core
-	if err := um.db.Table("users").Select("name, email, pictures").Where("id = ?", id).First(&res).Error; err != nil {
+	if err := um.db.Table("users").Select("name, email, picture").Where("id = ?", id).First(&res).Error; err != nil {
 		log.Error("error occurs in finding user profile", err.Error())
 		return user.Core{}, err
 	}
@@ -85,6 +86,47 @@ func (um *userModel) DeleteUser(id uint) error {
 
 	if err := um.db.Delete(userToDelete).Error; err != nil {
 		log.Error("cannot deleete user")
+		return err
+	}
+
+	return nil
+}
+
+func (um *userModel) UpdateProfile(id uint, name string, email string, password string, picture *multipart.FileHeader) error {
+	var UpdateUser User
+	if picture != nil {
+		file, err := picture.Open()
+		if err != nil {
+			log.Errorf("error occurs on open picture %v", err)
+			return errors.New("error on open picture")
+		}
+		defer file.Close()
+		uploadURL, err := helper.UploadFile(&file, "/users")
+		if err != nil {
+			log.Errorf("error occurs on uploadFile in path %v", err)
+			return errors.New("error on upload file in path")
+		}
+		UpdateUser.Picture = uploadURL[0]
+	}
+
+	hashedPassword, err := helper.HashPassword(password)
+	if err != nil {
+		log.Error("error occurs on hashing password", err.Error())
+		return errors.New("hashing password failed")
+	}
+
+	UpdateUser.ID = id
+	UpdateUser.Name = name
+	UpdateUser.Email = email
+	UpdateUser.Password = hashedPassword
+
+	tx := um.db.Model(&User{}).Where("id = ?", id).Updates(&UpdateUser)
+	if tx.RowsAffected < 1 {
+		log.Error("there is no column to change on update user")
+		return errors.New("no data affected")
+	}
+	if tx.Error != nil {
+		log.Error("error on update user")
 		return err
 	}
 
