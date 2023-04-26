@@ -2,14 +2,16 @@ module github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE
 
 go 1.19
 
-require github.com/spf13/viper v1.15.0
+require (
+	github.com/jinzhu/copier v0.3.5
+	github.com/spf13/viper v1.15.0
+)
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/jinzhu/copier v0.3.5 // indirect
 	github.com/leodido/go-urn v1.2.2 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 )
@@ -52,7 +54,7 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	github.com/subosito/gotenv v1.4.2 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
