@@ -25,7 +25,10 @@ func (ul userLogic) RegisterUser(newUser user.Core) error {
 			return errors.New("server error")
 		} else if strings.Contains(err.Error(), "value") {
 			return errors.New("invalid value")
+		} else if strings.Contains(err.Error(), "too short") {
+			return errors.New("invalid password length")
 		}
+		return errors.New("server error")
 	}
 	return nil
 }
@@ -53,7 +56,7 @@ func (ul userLogic) UserProfileLogic(id uint) (user.Core, error) {
 	result, err := ul.u.GetUserById(id)
 	if err != nil {
 		log.Error("failed to find user", err.Error())
-		return user.Core{}, errors.New("terjadi permasalahan server")
+		return user.Core{}, errors.New("internal server error")
 	}
 
 	return result, nil
