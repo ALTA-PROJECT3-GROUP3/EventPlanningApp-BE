@@ -85,7 +85,7 @@ func (um *userModel) DeleteUser(id uint) error {
 	}
 
 	if err := um.db.Delete(userToDelete).Error; err != nil {
-		log.Error("cannot deleete user")
+		log.Error("cannot delete user")
 		return err
 	}
 
