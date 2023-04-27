@@ -30,5 +30,5 @@ type UseCase interface {
 }
 
 type Repository interface {
-	InsertReservation() error
+	InsertReservation(userID uint, eventID uint, ticketID uint, quanitity int) (uint, error)
 }
