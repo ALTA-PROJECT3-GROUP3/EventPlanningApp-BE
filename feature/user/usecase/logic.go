@@ -18,6 +18,7 @@ func New(r user.Repository) user.UseCase {
 		u: r,
 	}
 }
+
 func (ul userLogic) RegisterUser(newUser user.Core) error {
 	if err := ul.u.InsertUser(newUser); err != nil {
 		log.Error("error on calling register insert user query", err.Error())
