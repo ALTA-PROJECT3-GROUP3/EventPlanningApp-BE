@@ -20,6 +20,14 @@ func New(repo event.Repository) event.UseCase {
 	}
 }
 
+// GetAll implements event.UseCase
+func (uc *eventLogic) GetAll(page int, name string) ([]event.Core, error) {
+	limit := 10
+	offset := (page - 1) * limit
+	data, err := uc.data.SelectAll(limit, offset, name)
+	return data, err
+}
+
 // Add implements event.UseCase
 func (uc *eventLogic) Add(newEvent event.Core, file *multipart.FileHeader) error {
 	errValidate := uc.vld.Struct(newEvent)
