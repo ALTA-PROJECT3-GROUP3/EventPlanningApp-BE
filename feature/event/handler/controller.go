@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/utils/helper"
@@ -17,6 +18,31 @@ type eventController struct {
 func New(us event.UseCase) event.Handler {
 	return &eventController{
 		service: us,
+	}
+}
+
+// GetAllHandler implements event.Handler
+func (ev *eventController) GetAllHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var pageNumber int = 1
+		pageParam := c.QueryParam("page")
+		if pageParam != "" {
+			pageConv, errConv := strconv.Atoi(pageParam)
+			if errConv != nil {
+				c.Logger().Error("terjadi kesalahan")
+				return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "Failed, page must number", nil))
+			} else {
+				pageNumber = pageConv
+			}
+		}
+
+		nameParam := c.QueryParam("name")
+		data, err := ev.service.GetAll(pageNumber, nameParam)
+		if err != nil {
+			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "Failed, error read data", nil))
+		}
+		dataResponse := CoreToGetAllEventResp(data)
+		return c.JSON(helper.ResponseFormat(http.StatusCreated, "get all event successfully", dataResponse))
 	}
 }
 

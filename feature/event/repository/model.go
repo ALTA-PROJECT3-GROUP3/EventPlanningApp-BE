@@ -43,3 +43,25 @@ func CoreToEvent(data event.Core) Event {
 		UserID:      data.UserID,
 	}
 }
+
+func EventToCore(data Event) event.Core {
+	return event.Core{
+		Id:          data.ID,
+		Name:        data.Name,
+		HostName:    data.HostName,
+		Description: data.Description,
+		Date:        time.Time{},
+		Location:    data.Location,
+		IsPaid:      false,
+		Pictures:    data.Pictures,
+		UserID:      data.UserID,
+	}
+}
+
+func ListModelToCore(dataModel []Event) []event.Core {
+	var dataCore []event.Core
+	for _, v := range dataModel {
+		dataCore = append(dataCore, EventToCore(v))
+	}
+	return dataCore
+}
