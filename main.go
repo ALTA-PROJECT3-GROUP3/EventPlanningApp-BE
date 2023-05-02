@@ -11,6 +11,10 @@ import (
 	uRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/user/repository"
 	uLogic "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/user/usecase"
 	"github.com/labstack/echo/v4"
+
+	paymentHandler "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment/handler"
+	paymentRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment/repository"
+	paymentLogic "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment/usecase"
 )
 
 func main() {
@@ -27,8 +31,13 @@ func main() {
 	commentSrv := commentLogic.New(commentMdl)
 	commentCtl := commentHandler.New(commentSrv)
 
+	paymentMdl := paymentRepo.New(db)
+	paymentSrv := paymentLogic.New(paymentMdl)
+	PaymentCtl := paymentHandler.New(paymentSrv)
+
 	routes.UserRoutes(e, uCtl)
 	routes.CommentRoutes(e, commentCtl)
+	routes.PaymentRoutes(e, PaymentCtl)
 
 	if err := e.Start(":8080"); err != nil {
 		e.Logger.Fatal("cannot start server", err.Error())

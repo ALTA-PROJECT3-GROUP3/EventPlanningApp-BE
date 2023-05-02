@@ -7,10 +7,15 @@ import (
 )
 
 type PaymentCore struct {
-	ID          uint
-	UserID      uint
-	GrandTotal  int
-	PaymentDate time.Time
+	ID            uint
+	PaymentType string
+	Bank          string
+	UserID        uint
+	OrderID       string
+	VA            string
+	Status        string
+	GrandTotal    int
+	PaymentDate   time.Time
 }
 
 type PaymentDetailCore struct {
@@ -21,14 +26,37 @@ type PaymentDetailCore struct {
 	Total     int
 }
 
+type ReservationsCore struct {
+	PaymentID     uint
+	UserID        uint
+	EventID       uint
+	OrderID       string
+	PhoneNumber   string
+	PaymentType string
+	Bank          string
+	VA            string
+	Status        string
+	Tickets       []struct {
+		TicketID uint
+		Name     string
+		Quantity int
+		Quota    int
+		Price    int
+	}
+	GrandTotal int
+}
+
 type Handler interface {
 	CreateReservationHandler() echo.HandlerFunc
 }
 
 type UseCase interface {
-	CreateReservationLogic() error
+	CreateReservationLogic(ReservationsCore) (ReservationsCore, error)
 }
 
 type Repository interface {
-	InsertReservation(userID uint, eventID uint, ticketID uint, quanitity int) (uint, error)
+	CheckEvent(ReservationsCore) error
+	CheckTicket(ReservationsCore) (ReservationsCore, error)
+	InsertPayment(PaymentCore) error
+	InsertPaymentDetails(PaymentDetailCore) error
 }

@@ -8,9 +8,14 @@ import (
 
 type Payment struct {
 	gorm.Model
-	UserID      uint
+	PaymentType string
+	Bank        string
+	OrderID     string
+	VA          string
+	Status      string
 	GrandTotal  int       `gorm:"not null"`
-	PaymentDate time.Time `gorm:"type:datetime"`
+	PaymentDate time.Time `gorm:"type:datetime;default:null"`
+	UserID      uint
 }
 
 type PaymentDetail struct {
