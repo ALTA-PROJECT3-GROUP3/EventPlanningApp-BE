@@ -20,6 +20,15 @@ func New(repo event.Repository) event.UseCase {
 	}
 }
 
+// DeleteBook implements event.UseCase
+func (uc *eventLogic) DeleteBook(userId uint, id uint) error {
+	errDelete := uc.data.DeleteBook(userId, id)
+	if errDelete != nil {
+		return errDelete
+	}
+	return nil
+}
+
 // Update implements event.UseCase
 func (uc *eventLogic) Update(userId uint, id uint, updateEvent event.Core, file *multipart.FileHeader) error {
 	if file != nil {
