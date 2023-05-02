@@ -18,4 +18,5 @@ func EventRoutes(e *echo.Echo, ev event.Handler) {
 	e.GET("/myevent", ev.MyeventHandler(), helper.JWTMiddleware())
 	e.GET("/events/:id", ev.GetEventByIdHandler())
 	e.PUT("/events/:id", ev.UpdateHandler(), helper.JWTMiddleware())
+	e.DELETE("/events/:id", ev.DeleteHandler(), helper.JWTMiddleware())
 }

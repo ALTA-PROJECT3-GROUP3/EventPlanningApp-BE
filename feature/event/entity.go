@@ -25,6 +25,7 @@ type Handler interface {
 	MyeventHandler() echo.HandlerFunc
 	GetEventByIdHandler() echo.HandlerFunc
 	UpdateHandler() echo.HandlerFunc
+	DeleteHandler() echo.HandlerFunc
 }
 
 type UseCase interface {
@@ -33,6 +34,7 @@ type UseCase interface {
 	MyEvent(userId uint, page int) ([]Core, error)
 	GetEventById(id uint) (Core, error)
 	Update(userId uint, id uint, updateEvent Core, file *multipart.FileHeader) error
+	DeleteBook(userId uint, id uint) error
 }
 
 type Repository interface {
@@ -41,4 +43,5 @@ type Repository interface {
 	MyEvent(userId uint, limit, offset int) ([]Core, error)
 	GetEventById(id uint) (Core, error)
 	Update(userId uint, id uint, input Core) error
+	DeleteBook(userId uint, id uint) error
 }
