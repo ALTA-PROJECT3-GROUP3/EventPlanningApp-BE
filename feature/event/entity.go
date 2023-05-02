@@ -22,14 +22,17 @@ type Core struct {
 type Handler interface {
 	AddHandler() echo.HandlerFunc
 	GetAllHandler() echo.HandlerFunc
+	MyeventHandler() echo.HandlerFunc
 }
 
 type UseCase interface {
 	Add(newEvent Core, file *multipart.FileHeader) error
 	GetAll(page int, name string) ([]Core, error)
+	MyEvent(userId int, page int) ([]Core, error)
 }
 
 type Repository interface {
 	Insert(input Core) error
 	SelectAll(limit, offset int, name string) ([]Core, error)
+	MyEvent(userId int, limit, offset int) ([]Core, error)
 }
