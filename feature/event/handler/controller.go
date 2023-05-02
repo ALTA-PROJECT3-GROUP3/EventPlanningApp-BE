@@ -21,6 +21,11 @@ func New(us event.UseCase) event.Handler {
 	}
 }
 
+// MyeventHandler implements event.Handler
+func (*eventController) MyeventHandler() echo.HandlerFunc {
+	panic("unimplemented")
+}
+
 // GetAllHandler implements event.Handler
 func (ev *eventController) GetAllHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
