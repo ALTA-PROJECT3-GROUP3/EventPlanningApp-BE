@@ -20,6 +20,14 @@ func New(repo event.Repository) event.UseCase {
 	}
 }
 
+// MyEvent implements event.UseCase
+func (uc *eventLogic) MyEvent(userId int, page int) ([]event.Core, error) {
+	limit := 10
+	offset := (page - 1) * limit
+	data, err := uc.data.MyEvent(userId, limit, offset)
+	return data, err
+}
+
 // GetAll implements event.UseCase
 func (uc *eventLogic) GetAll(page int, name string) ([]event.Core, error) {
 	limit := 10
