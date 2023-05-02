@@ -18,6 +18,20 @@ func New(db *gorm.DB) event.Repository {
 	}
 }
 
+// DeleteBook implements event.Repository
+func (ev *eventQuery) DeleteBook(userId uint, id uint) error {
+	tx := ev.db.Where("user_id = ?", userId).Delete(&Event{}, id)
+	if tx.RowsAffected < 1 {
+		log.Error("Terjadi error")
+		return errors.New("no data deleted")
+	}
+	if tx.Error != nil {
+		log.Error("Event tidak ditemukan")
+		return tx.Error
+	}
+	return nil
+}
+
 // Update implements event.Repository
 func (ev *eventQuery) Update(userId uint, id uint, input event.Core) error {
 	data := CoreToEvent(input)
