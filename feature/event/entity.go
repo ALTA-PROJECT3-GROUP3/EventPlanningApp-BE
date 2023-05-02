@@ -24,6 +24,7 @@ type Handler interface {
 	GetAllHandler() echo.HandlerFunc
 	MyeventHandler() echo.HandlerFunc
 	GetEventByIdHandler() echo.HandlerFunc
+	UpdateHandler() echo.HandlerFunc
 }
 
 type UseCase interface {
@@ -31,6 +32,7 @@ type UseCase interface {
 	GetAll(page int, name string) ([]Core, error)
 	MyEvent(userId uint, page int) ([]Core, error)
 	GetEventById(id uint) (Core, error)
+	Update(userId uint, id int, updateEvent Core, file *multipart.FileHeader) error
 }
 
 type Repository interface {
@@ -38,4 +40,5 @@ type Repository interface {
 	SelectAll(limit, offset int, name string) ([]Core, error)
 	MyEvent(userId uint, limit, offset int) ([]Core, error)
 	GetEventById(id uint) (Core, error)
+	Update(userId uint, id uint, input Core) error
 }
