@@ -16,8 +16,20 @@ func New(db *gorm.DB) event.Repository {
 	}
 }
 
+// GetEventById implements event.Repository
+func (ev *eventQuery) GetEventById(id uint) (event.Core, error) {
+	tmp := Event{}
+	tx := ev.db.Where("id = ?", id).First(&tmp)
+	if tx.Error != nil {
+		log.Error("Event tidak ditemukan")
+		return event.Core{}, tx.Error
+	}
+
+	return EventToCore(tmp), nil
+}
+
 // MyEvent implements event.Repository
-func (ev *eventQuery) MyEvent(userId int, limit int, offset int) ([]event.Core, error) {
+func (ev *eventQuery) MyEvent(userId uint, limit int, offset int) ([]event.Core, error) {
 	var eventsModel []Event
 	tx := ev.db.Limit(limit).Offset(offset).Where("user_id = ?", userId).Find(&eventsModel)
 	if tx.Error != nil {
