@@ -21,6 +21,25 @@ func New(us event.UseCase) event.Handler {
 	}
 }
 
+// GetEventByIdHandler implements event.Handler
+func (ev *eventController) GetEventByIdHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		eventId, errCnv := strconv.Atoi(c.Param("id"))
+		if errCnv != nil {
+			c.Logger().Error("terjadi kesalahan")
+			return errCnv
+		}
+		data, err := ev.service.GetEventById(uint(eventId))
+		if err != nil {
+			c.Logger().Error("terjadi kesalahan", err.Error())
+			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "Failed, error read data", nil))
+		}
+		res := EventResponse{}
+		copier.Copy(&res, &data)
+		return c.JSON(helper.ResponseFormat(http.StatusCreated, "detail book successfully displayed", res))
+	}
+}
+
 // MyeventHandler implements event.Handler
 func (ev *eventController) MyeventHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -43,7 +62,7 @@ func (ev *eventController) MyeventHandler() echo.HandlerFunc {
 		}
 
 		// nameParam := c.QueryParam("name")
-		data, err := ev.service.MyEvent(int(userId), pageNumber)
+		data, err := ev.service.MyEvent(userId, pageNumber)
 		if err != nil {
 			c.Logger().Error("terjadi kesalahan")
 			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "Failed, error read data", nil))
