@@ -21,6 +21,29 @@ func New(us event.UseCase) event.Handler {
 	}
 }
 
+// DeleteHandler implements event.Handler
+func (ev *eventController) DeleteHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userId := helper.DecodeToken(c)
+		if userId == 0 {
+			c.Logger().Error("decode token is blank")
+			return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "jwt invalid", nil))
+		}
+		eventId, errCnv := strconv.Atoi(c.Param("id"))
+		if errCnv != nil {
+			c.Logger().Error("Event tidak ditemukan")
+			return errCnv
+		}
+
+		err := ev.service.DeleteBook(userId, uint(eventId))
+		if err != nil {
+			c.Logger().Error("terjadi kesalahan", err.Error())
+			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "terjadi kesalahan Delete Event", nil))
+		}
+		return c.JSON(helper.ResponseFormat(http.StatusOK, "delete Event successfully", nil))
+	}
+}
+
 // UpdateHandler implements event.Handler
 func (ev *eventController) UpdateHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
