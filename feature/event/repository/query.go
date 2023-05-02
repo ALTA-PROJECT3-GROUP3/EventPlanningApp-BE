@@ -16,6 +16,18 @@ func New(db *gorm.DB) event.Repository {
 	}
 }
 
+// MyEvent implements event.Repository
+func (ev *eventQuery) MyEvent(userId int, limit int, offset int) ([]event.Core, error) {
+	var eventsModel []Event
+	tx := ev.db.Limit(limit).Offset(offset).Where("user_id = ?", userId).Find(&eventsModel)
+	if tx.Error != nil {
+		log.Error("Terjadi error saat select Event")
+		return nil, tx.Error
+	}
+	booksCoreAll := ListModelToCore(eventsModel)
+	return booksCoreAll, nil
+}
+
 // SelectAll implements event.Repository
 func (ev *eventQuery) SelectAll(limit int, offset int, name string) ([]event.Core, error) {
 	nameSearch := "%" + name + "%"
