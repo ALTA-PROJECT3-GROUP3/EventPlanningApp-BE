@@ -23,16 +23,19 @@ type Handler interface {
 	AddHandler() echo.HandlerFunc
 	GetAllHandler() echo.HandlerFunc
 	MyeventHandler() echo.HandlerFunc
+	GetEventByIdHandler() echo.HandlerFunc
 }
 
 type UseCase interface {
 	Add(newEvent Core, file *multipart.FileHeader) error
 	GetAll(page int, name string) ([]Core, error)
-	MyEvent(userId int, page int) ([]Core, error)
+	MyEvent(userId uint, page int) ([]Core, error)
+	GetEventById(id uint) (Core, error)
 }
 
 type Repository interface {
 	Insert(input Core) error
 	SelectAll(limit, offset int, name string) ([]Core, error)
-	MyEvent(userId int, limit, offset int) ([]Core, error)
+	MyEvent(userId uint, limit, offset int) ([]Core, error)
+	GetEventById(id uint) (Core, error)
 }
