@@ -15,6 +15,10 @@ import (
 	paymentHandler "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment/handler"
 	paymentRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment/repository"
 	paymentLogic "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment/usecase"
+
+	eHandler "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event/handler"
+	eRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event/repository"
+	eLogic "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event/usecase"
 )
 
 func main() {
@@ -35,9 +39,14 @@ func main() {
 	paymentSrv := paymentLogic.New(paymentMdl)
 	PaymentCtl := paymentHandler.New(paymentSrv)
 
+	eMdl := eRepo.New(db)
+	eSrv := eLogic.New(eMdl)
+	eCtl := eHandler.New(eSrv)
+
 	routes.UserRoutes(e, uCtl)
 	routes.CommentRoutes(e, commentCtl)
 	routes.PaymentRoutes(e, PaymentCtl)
+	routes.EventRoutes(e, eCtl)
 
 	if err := e.Start(":8080"); err != nil {
 		e.Logger.Fatal("cannot start server", err.Error())
