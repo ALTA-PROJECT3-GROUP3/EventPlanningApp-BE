@@ -21,6 +21,39 @@ func New(us event.UseCase) event.Handler {
 	}
 }
 
+// UpdateHandler implements event.Handler
+func (ev *eventController) UpdateHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userId := helper.DecodeToken(c)
+		if userId == 0 {
+			c.Logger().Error("decode token is blank")
+			return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "jwt invalid", nil))
+		}
+		eventId, errCnv := strconv.Atoi(c.Param("id"))
+		if errCnv != nil {
+			c.Logger().Error("Event tidak ditemukan")
+			return errCnv
+		}
+
+		updateInput := EventRequest{}
+		if err := c.Bind(&updateInput); err != nil {
+			c.Logger().Error("terjadi kesalahan bind", err.Error())
+			return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "invalid input", nil))
+		}
+
+		file, _ := c.FormFile("pictures")
+
+		updateEvent := event.Core{}
+		copier.Copy(&updateEvent, &updateInput)
+		err := ev.service.Update(userId, uint(eventId), updateEvent, file)
+		if err != nil {
+			c.Logger().Error("terjadi kesalahan Update Event", err.Error())
+			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "terjadi kesalahan Update Event", nil))
+		}
+		return c.JSON(helper.ResponseFormat(http.StatusOK, "update Event successfully", nil))
+	}
+}
+
 // GetEventByIdHandler implements event.Handler
 func (ev *eventController) GetEventByIdHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {

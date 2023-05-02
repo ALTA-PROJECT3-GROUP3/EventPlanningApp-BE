@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event"
 	"github.com/labstack/gommon/log"
 	"gorm.io/gorm"
@@ -14,6 +16,21 @@ func New(db *gorm.DB) event.Repository {
 	return &eventQuery{
 		db: db,
 	}
+}
+
+// Update implements event.Repository
+func (ev *eventQuery) Update(userId uint, id uint, input event.Core) error {
+	data := CoreToEvent(input)
+	tx := ev.db.Model(&Event{}).Where("id = ? AND user_id = ?", id, userId).Updates(&data)
+	if tx.RowsAffected < 1 {
+		log.Error("Terjadi error saat Update Event")
+		return errors.New("event no updated")
+	}
+	if tx.Error != nil {
+		log.Error("Event tidak ditemukan")
+		return tx.Error
+	}
+	return nil
 }
 
 // GetEventById implements event.Repository

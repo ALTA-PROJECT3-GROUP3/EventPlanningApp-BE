@@ -20,6 +20,25 @@ func New(repo event.Repository) event.UseCase {
 	}
 }
 
+// Update implements event.UseCase
+func (uc *eventLogic) Update(userId uint, id uint, updateEvent event.Core, file *multipart.FileHeader) error {
+	if file != nil {
+		file, _ := file.Open()
+		uploadURL, err := helper.UploadFile(file, "/events")
+		if err != nil {
+			return err
+		}
+		updateEvent.Pictures = uploadURL[0]
+	}
+
+	errUpdate := uc.data.Update(userId, id, updateEvent)
+	if errUpdate != nil {
+		return errUpdate
+	}
+
+	return nil
+}
+
 // GetEventById implements event.UseCase
 func (uc *eventLogic) GetEventById(id uint) (event.Core, error) {
 	data, err := uc.data.GetEventById(id)
