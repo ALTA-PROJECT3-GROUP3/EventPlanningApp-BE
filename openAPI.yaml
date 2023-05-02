@@ -413,6 +413,13 @@ paths:
           schema:
             type: number
             example: 10
+        - in: query
+          name: type
+          description: type of events to show (joined/owned)
+          schema:
+            type: string
+            enum: [joined, owned]
+            example: joined
       responses:
         '200':
           description: get all events by user id
@@ -538,9 +545,25 @@ paths:
                   data:
                     type: object
                     properties:
+                      invoice_date:
+                        type: string
+                        format: date
+                        example: 23/04/2023
+                      event_name:
+                        type: string
+                        example: Level Up Your Business Through SEO
                       payment_id:
                         type: integer
                         example: 1
+                      status:
+                        type: string
+                        example: pending
+                      total_price:
+                        type: integer
+                        example: 2000000
+                      va_number:
+                        type: string
+                        example: 283581462
                   code:
                     type: number
                     example: 200
