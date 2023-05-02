@@ -32,7 +32,7 @@ type UseCase interface {
 	GetAll(page int, name string) ([]Core, error)
 	MyEvent(userId uint, page int) ([]Core, error)
 	GetEventById(id uint) (Core, error)
-	Update(userId uint, id int, updateEvent Core, file *multipart.FileHeader) error
+	Update(userId uint, id uint, updateEvent Core, file *multipart.FileHeader) error
 }
 
 type Repository interface {
