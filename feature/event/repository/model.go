@@ -1,34 +1,34 @@
 package repository
 
 import (
-	"time"
-
 	cRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/comment/repository"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event"
+	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket"
+	tRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket/repository"
 	"gorm.io/gorm"
 )
 
 type Event struct {
 	gorm.Model
-	Name        string    `gorm:"type:varchar(50);not null"`
-	HostName    string    `gorm:"type:varchar(50);not null"`
-	Description string    `gorm:"type:text;not null"`
-	Date        time.Time `gorm:"type:datetime;not null"`
-	Location    string    `gorm:"type:varchar(50);not null"`
-	IsPaid      bool      `gorm:"default:false"`
-	Pictures    string    `gorm:"type:text;not null"`
+	Name        string `gorm:"type:varchar(50);not null"`
+	HostName    string `gorm:"type:varchar(50);not null"`
+	Description string `gorm:"type:text;not null"`
+	Date        string `gorm:"type:varchar(50);not null"`
+	Location    string `gorm:"type:varchar(50);not null"`
+	IsPaid      bool   `gorm:"default:false"`
+	Pictures    string `gorm:"type:text"`
 	UserID      uint
-	Tickets     []Ticket
+	Tickets     []tRepo.Ticket
 	Comments    []cRepo.Comment
 }
 
-type Ticket struct {
-	gorm.Model
-	Name    string `gorm:"type:varchar(50);not null"`
-	Quota   int    `gorm:"not null"`
-	Price   int    `gorm:"not null"`
-	EventID uint
-}
+// type Ticket struct {
+// 	gorm.Model
+// 	Name    string `gorm:"type:varchar(50);not null"`
+// 	Quota   int    `gorm:"not null"`
+// 	Price   int    `gorm:"not null"`
+// 	EventID uint
+// }
 
 func CoreToEvent(data event.Core) Event {
 	return Event{
@@ -36,7 +36,7 @@ func CoreToEvent(data event.Core) Event {
 		Name:        data.Name,
 		HostName:    data.HostName,
 		Description: data.Description,
-		Date:        time.Time{},
+		Date:        data.Date,
 		Location:    data.Location,
 		IsPaid:      false,
 		Pictures:    data.Pictures,
@@ -45,17 +45,29 @@ func CoreToEvent(data event.Core) Event {
 }
 
 func EventToCore(data Event) event.Core {
-	return event.Core{
+	result := event.Core{
 		Id:          data.ID,
 		Name:        data.Name,
 		HostName:    data.HostName,
 		Description: data.Description,
-		Date:        time.Time{},
+		Date:        data.Date,
 		Location:    data.Location,
 		IsPaid:      false,
 		Pictures:    data.Pictures,
 		UserID:      data.UserID,
 	}
+
+	for _, v := range data.Tickets {
+		cticket := ticket.Core{
+			Id:      v.ID,
+			Name:    v.Name,
+			Quota:   v.Quota,
+			Price:   v.Price,
+			EventID: v.EventID,
+		}
+		result.Tickets = append(result.Tickets, cticket)
+	}
+	return result
 }
 
 func ListModelToCore(dataModel []Event) []event.Core {

@@ -2,22 +2,31 @@ package event
 
 import (
 	"mime/multipart"
-	"time"
 
+	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket"
 	"github.com/labstack/echo/v4"
 )
 
 type Core struct {
 	Id          uint
-	Name        string    `validate:"required"`
-	HostName    string    `validate:"required"`
-	Description string    `validate:"required"`
-	Date        time.Time `validate:"required"`
-	Location    string    `validate:"required"`
+	Name        string `validate:"required"`
+	HostName    string `validate:"required"`
+	Description string `validate:"required"`
+	Date        string `validate:"required"`
+	Location    string `validate:"required"`
 	IsPaid      bool
-	Pictures    string `validate:"required"`
+	Pictures    string
 	UserID      uint
+	Tickets     []ticket.Core
 }
+
+// type Ticket struct {
+// 	Id      uint
+// 	Name    string
+// 	Quota   int
+// 	Price   int
+// 	EventID uint
+// }
 
 type Handler interface {
 	AddHandler() echo.HandlerFunc

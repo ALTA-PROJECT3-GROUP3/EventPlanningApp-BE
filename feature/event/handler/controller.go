@@ -173,6 +173,7 @@ func (ev *eventController) AddHandler() echo.HandlerFunc {
 			c.Logger().Error("terjadi kesalahan saat add Event", err.Error())
 			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, err.Error(), nil))
 		}
+
 		return c.JSON(helper.ResponseFormat(http.StatusCreated, "add event successfully", nil))
 	}
 }
