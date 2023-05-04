@@ -20,7 +20,12 @@ func New(tc ticket.Repository) ticket.UseCase {
 
 // Update implements ticket.UseCase
 func (tk *ticketLogic) Update(userId uint, id uint, updateTicket ticket.Core) error {
-	panic("unimplemented")
+	errUpdate := tk.tc.Update(userId, id, updateTicket)
+	if errUpdate != nil {
+		return errUpdate
+	}
+
+	return nil
 }
 
 // Create implements ticket.UseCase
@@ -33,14 +38,14 @@ func (tk *ticketLogic) Create(newTicket ticket.Core) error {
 			return errors.New("failed to connect to database")
 		}
 
-		if strings.Contains(err.Error(), "table 'events' not found") {
-			log.Error("table events not found")
-			return errors.New("table 'events' not found")
+		if strings.Contains(err.Error(), "table 'tickets' not found") {
+			log.Error("table tickets not found")
+			return errors.New("table 'tickets' not found")
 		}
 
-		if strings.Contains(err.Error(), "event not found") {
-			log.Error("event id is does not exist")
-			return errors.New("event not found (bad request)")
+		if strings.Contains(err.Error(), "ticket not found") {
+			log.Error("ticket id is does not exist")
+			return errors.New("ticket not found (bad request)")
 		}
 
 		if strings.Contains(err.Error(), "table 'tickets' not found") {
