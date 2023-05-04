@@ -9,12 +9,4 @@ type EventRequest struct {
 	IsPaid      bool   `json:"is_paid" form:"is_paid"`
 	Pictures    string `json:"pictures" form:"pictures"`
 	UserID      uint   `json:"user_id" form:"user_id"`
-	// TicketID    []int  `json:"ticket_id"form:"ticket_id"`
 }
-
-// type Ticket struct {
-// 	Name    string `json:"name" form:"name"`
-// 	Quota   int    `json:"quota" form:"quota"`
-// 	Price   int    `json:"price" form:"price"`
-// 	EventID uint   `json:"event_id" form:"event_id"`
-// }
