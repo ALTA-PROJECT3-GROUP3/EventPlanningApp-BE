@@ -122,8 +122,8 @@ $ go run .
 # 🤖 Author
 
 -  Adi Yuda Pranata  <br>  [![GitHub](https://img.shields.io/badge/Yuda-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Adiyuda123)
--  Kristain Putra <br>  [![GitHub](https://img.shields.io/badge/Iqbal-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/kristain09)
--  Haris <br>  [![GitHub](https://img.shields.io/badge/Wanta-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ares0177)
+-  Kristain Putra <br>  [![GitHub](https://img.shields.io/badge/Kristain-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/kristain09)
+-  Haris <br>  [![GitHub](https://img.shields.io/badge/Haris-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ares0177)
 
 
 
