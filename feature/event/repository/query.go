@@ -50,7 +50,7 @@ func (ev *eventQuery) Update(userId uint, id uint, input event.Core) error {
 // GetEventById implements event.Repository
 func (ev *eventQuery) GetEventById(id uint) (event.Core, error) {
 	tmp := Event{}
-	tx := ev.db.Preload("Tickets").Preload("Comments").Where("events.id = ?", id).Select("events.id, events.name, events.host_name, events.description, events.date, events.location, events.is_paid, events.pictures").Joins("JOIN users ON events.user_id = users.id").Group("events.id").First(&tmp)
+	tx := ev.db.Preload("Tickets").Preload("Comments").Where("id = ?", id).First(&tmp)
 	if tx.Error != nil {
 		log.Error("Event tidak ditemukan")
 		return event.Core{}, tx.Error
