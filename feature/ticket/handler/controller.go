@@ -19,6 +19,11 @@ func New(cln ticket.UseCase) ticket.Handler {
 	}
 }
 
+// UpdateHandler implements ticket.Handler
+func (tk *ticketHandler) UpdateHandler() echo.HandlerFunc {
+	panic("unimplemented")
+}
+
 // CreateHandler implements ticket.Handler
 func (tc *ticketHandler) CreateHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {

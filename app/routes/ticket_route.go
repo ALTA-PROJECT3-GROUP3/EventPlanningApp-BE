@@ -13,4 +13,5 @@ func TicketRoutes(e *echo.Echo, tc ticket.Handler) {
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
 	e.POST("/tickets", tc.CreateHandler(), helper.JWTMiddleware())
+	e.PUT("/tickets", tc.CreateHandler(), helper.JWTMiddleware())
 }

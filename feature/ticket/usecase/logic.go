@@ -18,6 +18,11 @@ func New(tc ticket.Repository) ticket.UseCase {
 	}
 }
 
+// Update implements ticket.UseCase
+func (tk *ticketLogic) Update(userId uint, id uint, updateTicket ticket.Core) error {
+	panic("unimplemented")
+}
+
 // Create implements ticket.UseCase
 func (tk *ticketLogic) Create(newTicket ticket.Core) error {
 	err := tk.tc.Insert(newTicket)

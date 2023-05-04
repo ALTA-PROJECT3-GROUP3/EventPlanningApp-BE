@@ -3,6 +3,7 @@ package repository
 import (
 	"time"
 
+	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment"
 	"gorm.io/gorm"
 )
 
@@ -24,4 +25,18 @@ type PaymentDetail struct {
 	PaymentID uint
 	Qty       int `gorm:"not null"`
 	Total     int `gorm:"not null"`
+}
+
+func CoreToData(data payment.PaymentCore) Payment {
+	return Payment{
+		Model:       gorm.Model{ID: data.ID},
+		PaymentType: data.PaymentType,
+		Bank:        data.Bank,
+		OrderID:     data.OrderID,
+		VA:          data.VA,
+		Status:      data.Status,
+		GrandTotal:  data.GrandTotal,
+		PaymentDate: time.Time{},
+		UserID:      data.UserID,
+	}
 }

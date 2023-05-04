@@ -51,10 +51,12 @@ type Tickets struct {
 
 type Handler interface {
 	CreateReservationHandler() echo.HandlerFunc
+	MidtransNotification() echo.HandlerFunc
 }
 
 type UseCase interface {
 	CreateReservationLogic(ReservationsCore) (ReservationsCore, error)
+	UpdateTransaction(input PaymentCore) error
 }
 
 type Repository interface {
@@ -62,4 +64,5 @@ type Repository interface {
 	CheckTicket(ReservationsCore) (ReservationsCore, error)
 	InsertPayment(PaymentCore) error
 	InsertPaymentDetails(PaymentDetailCore) error
+	UpdateTransaction(input PaymentCore) error
 }

@@ -14,4 +14,5 @@ func PaymentRoutes(e *echo.Echo, pc payment.Handler) {
 	e.Use(middleware.Logger())
 
 	e.POST("/reservations", pc.CreateReservationHandler(), helper.JWTMiddleware())
+	e.POST("transactions/notifications", pc.MidtransNotification())
 }
