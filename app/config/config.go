@@ -3,7 +3,6 @@ package config
 import (
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/spf13/viper"
 )
@@ -22,7 +21,7 @@ type AppConfig struct {
 	DBUSER     string
 	DBPASSWORD string
 	DBHOST     string
-	DBPORT     int
+	DBPORT     string
 	DBNAME     string
 }
 
@@ -47,8 +46,7 @@ func ReadEnv() *AppConfig {
 		isRead = false
 	}
 	if val, found := os.LookupEnv("DB_PORT"); found {
-		cnv, _ := strconv.Atoi(val)
-		app.DBPORT = cnv
+		app.DBPORT = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("DB_NAME"); found {
@@ -101,7 +99,7 @@ func ReadEnv() *AppConfig {
 		app.DBUSER = viper.Get("DB_USER").(string)
 		app.DBPASSWORD = viper.Get("DB_PASS").(string)
 		app.DBHOST = viper.Get("DB_HOST").(string)
-		app.DBPORT, _ = strconv.Atoi(viper.Get("DB_PORT").(string))
+		app.DBPORT, _ = viper.Get("DB_HOST").(string)
 		app.DBNAME = viper.Get("DB_NAME").(string)
 
 		JWTKEY = viper.Get("JWT_KEY").(string)

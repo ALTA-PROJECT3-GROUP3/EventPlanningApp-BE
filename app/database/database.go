@@ -10,7 +10,7 @@ import (
 )
 
 func InitDBMySql(cfg config.AppConfig) *gorm.DB {
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		cfg.DBUSER,
 		cfg.DBPASSWORD,
 		cfg.DBHOST,
