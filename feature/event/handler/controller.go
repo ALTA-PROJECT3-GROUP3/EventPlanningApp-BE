@@ -90,9 +90,9 @@ func (ev *eventController) GetEventByIdHandler() echo.HandlerFunc {
 			c.Logger().Error("terjadi kesalahan", err.Error())
 			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "Failed, error read data", nil))
 		}
-		res := EventResponse{}
+		res := CoreToGetAllEventResp
 		copier.Copy(&res, &data)
-		return c.JSON(helper.ResponseFormat(http.StatusCreated, "detail book successfully displayed", res))
+		return c.JSON(helper.ResponseFormat(http.StatusCreated, "detail event successfully displayed", res))
 	}
 }
 
