@@ -19,11 +19,11 @@ var (
 )
 
 type AppConfig struct {
-	DB_USER string
-	DB_PASS string
-	DB_HOST string
-	DB_PORT int
-	DB_NAME string
+	DBUSER     string
+	DBPASSWORD string
+	DBHOST     string
+	DBPORT     int
+	DBNAME     string
 }
 
 func InitConfig() *AppConfig {
@@ -35,24 +35,24 @@ func ReadEnv() *AppConfig {
 	isRead := true
 
 	if val, found := os.LookupEnv("DB_USER"); found {
-		app.DB_USER = val
+		app.DBUSER = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("DB_PASS"); found {
-		app.DB_PASS = val
+		app.DBPASSWORD = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("DB_HOST"); found {
-		app.DB_HOST = val
+		app.DBHOST = val
 		isRead = false
 	}
 	if val, found := os.LookupEnv("DB_PORT"); found {
 		cnv, _ := strconv.Atoi(val)
-		app.DB_PORT = cnv
+		app.DBPORT = cnv
 		isRead = false
 	}
 	if val, found := os.LookupEnv("DB_NAME"); found {
-		app.DB_NAME = val
+		app.DBNAME = val
 		isRead = false
 	}
 
@@ -98,11 +98,11 @@ func ReadEnv() *AppConfig {
 			return nil
 		}
 
-		app.DB_USER = viper.Get("DB_USER").(string)
-		app.DB_PASS = viper.Get("DB_PASS").(string)
-		app.DB_HOST = viper.Get("DB_HOST").(string)
-		app.DB_PORT, _ = strconv.Atoi(viper.Get("DB_PORT").(string))
-		app.DB_NAME = viper.Get("DB_NAME").(string)
+		app.DBUSER = viper.Get("DB_USER").(string)
+		app.DBPASSWORD = viper.Get("DB_PASS").(string)
+		app.DBHOST = viper.Get("DB_HOST").(string)
+		app.DBPORT, _ = strconv.Atoi(viper.Get("DB_PORT").(string))
+		app.DBNAME = viper.Get("DB_NAME").(string)
 
 		JWTKEY = viper.Get("JWT_KEY").(string)
 
