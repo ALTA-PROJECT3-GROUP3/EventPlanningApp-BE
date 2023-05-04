@@ -48,14 +48,19 @@ func (pc *paymentController) CreateReservationHandler() echo.HandlerFunc {
 			}
 			reservation.Tickets = append(reservation.Tickets, tmp)
 		}
-		
+
 		res, err := pc.service.CreateReservationLogic(reservation)
 		if err != nil {
 			c.Logger().Error("error on calling reservationlogic")
 			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "server error", nil))
 		}
 
-		data.PaymentID = res.PaymentID
+		data.Event_Name = res.Tickets[0].Name
+		data.PaymentID = res.OrderID
+		data.Status = res.Status
+		data.VA = res.VA
+		data.Total = res.GrandTotal
+		data.InvcoiceDate = res.JoinDate
 		return c.JSON(helper.ResponseFormat(http.StatusCreated, "succes to join event", data))
 	}
 }

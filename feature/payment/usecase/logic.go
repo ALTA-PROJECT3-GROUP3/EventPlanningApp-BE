@@ -122,6 +122,10 @@ func ChargePayment(rsv payment.ReservationsCore) (payment.ReservationsCore, erro
 	rsv.VA = resp.VaNumbers[0].VANumber
 	rsv.Status = resp.TransactionStatus
 	rsv.OrderID = resp.OrderID
+	rsv.Bank = resp.Bank
+	now := time.Now()
+	formattedDate := now.Format("02/01/2006")
+	rsv.JoinDate = formattedDate
 
 	return rsv, nil
 }

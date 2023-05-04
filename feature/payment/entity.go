@@ -36,6 +36,7 @@ type ReservationsCore struct {
 	Bank        string
 	VA          string
 	Status      string
+	JoinDate    string
 	Tickets     []Tickets
 	GrandTotal  int
 }
