@@ -9,17 +9,18 @@ import (
 )
 
 type Core struct {
-	Id          uint
-	Name        string `validate:"required"`
-	HostName    string `validate:"required"`
-	Description string `validate:"required"`
-	Date        string `validate:"required"`
-	Location    string `validate:"required"`
-	IsPaid      bool
-	Pictures    string
-	UserID      uint
-	Tickets     []ticket.Core
-	Comments    []comment.Core
+	Id            uint
+	Name          string `validate:"required"`
+	HostName      string `validate:"required"`
+	Description   string `validate:"required"`
+	Date          string `validate:"required"`
+	Location      string `validate:"required"`
+	IsPaid        bool
+	AttendesQuota int
+	Pictures      string
+	UserID        uint
+	Tickets       []ticket.Core
+	Comments      []comment.Core
 }
 
 type Handler interface {
