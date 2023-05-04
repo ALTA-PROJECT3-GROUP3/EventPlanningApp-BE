@@ -27,9 +27,32 @@ type PaymentDetail struct {
 	Total     int `gorm:"not null"`
 }
 
-func CoreToData(data payment.PaymentCore) Payment {
+type ReservationsCore struct {
+	PaymentID   uint
+	UserID      uint
+	EventID     uint
+	OrderID     string
+	PhoneNumber string
+	PaymentType string
+	Bank        string
+	VA          string
+	Status      string
+	JoinDate    string
+	Tickets     []Tickets
+	GrandTotal  int
+}
+
+type Tickets struct {
+	TicketID uint
+	Name     string
+	Quantity int
+	Quota    int
+	Price    int
+}
+
+func CoreToData(data payment.ReservationsCore) Payment {
 	return Payment{
-		Model:       gorm.Model{ID: data.ID},
+		Model:       gorm.Model{},
 		PaymentType: data.PaymentType,
 		Bank:        data.Bank,
 		OrderID:     data.OrderID,
