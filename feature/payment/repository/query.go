@@ -40,21 +40,19 @@ func (pm *paymentModel) CheckTicket(rsv payment.ReservationsCore) (payment.Reser
 		ticketDB payment.Tickets
 	)
 
-	for _, ticket := range rsv.Tickets {
-		if err := pm.db.Raw("SELECT id, name, quota, price, event_id FROM tickets WHERE id = ? AND event_id = ?", ticket.TicketID, rsv.EventID).Scan(&ticketDB).Count(&count).Error; err != nil {
+	for i := 0; i < len(rsv.Tickets); i++ {
+		if err := pm.db.Raw("SELECT id, name, quota, price, event_id FROM tickets WHERE id = ? AND event_id = ?", rsv.Tickets[i].TicketID, rsv.EventID).Scan(&ticketDB).Count(&count).Error; err != nil {
 			log.Error("error occurred in finding tickets for reservations")
 			return rsv, err
 		}
-		fmt.Println(ticketDB)
-		rsv.Tickets = append(rsv.Tickets, payment.Tickets{
-			TicketID: ticketDB.TicketID,
-			Name:     ticketDB.Name,
-			Quantity: ticket.Quantity,
-			Quota:    ticketDB.Quota,
-			Price:    ticketDB.Price,
-		})
+		rsv.Tickets[i].Name = ticketDB.Name
+		rsv.Tickets[i].Quota = ticketDB.Quota
+		rsv.Tickets[i].Price = ticketDB.Price
 	}
-	fmt.Printf("rsv ticket %v", rsv.Tickets)
+	fmt.Printf("rsv Name: %v\n", rsv.Tickets[0].Name)
+	fmt.Printf("rsv Quantity: %v\n", rsv.Tickets[0].Quantity)
+	fmt.Printf("rsv Quota: %v\n", rsv.Tickets[0].Quota)
+	fmt.Printf("rsv Price: %v\n", rsv.Tickets[0].Price)
 	return rsv, nil
 }
 

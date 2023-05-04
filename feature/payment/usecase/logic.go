@@ -35,18 +35,23 @@ func (pl *paymentLogic) CreateReservationLogic(rsv payment.ReservationsCore) (pa
 	}
 
 	reservation, err := pl.pm.CheckTicket(rsv)
+	for key, val := range reservation.Tickets {
+		fmt.Printf("%v:%v\n", key, val)
+	}
 	if err != nil {
 		log.Error("error in check ticket")
 		return payment.ReservationsCore{}, err
 	}
 
 	for _, ticket := range reservation.Tickets {
-		fmt.Println(reservation.Tickets)
+
 		if ticket.Quota < ticket.Quantity {
 			log.Printf("ticket quota is %d, and quantity to buy is %d ticket are out of quota", ticket.Quota, ticket.Quantity)
 			return payment.ReservationsCore{}, errors.New("out of quota")
 		}
-		reservation.GrandTotal += (ticket.Quota * ticket.Quantity)
+		reservation.GrandTotal += (ticket.Price * ticket.Quantity)
+		fmt.Println("====================HITUNG GRAND TOTAL===============")
+		fmt.Printf("quota adalah %d dan Price adalah %d dan total adalah %d", ticket.Quota, ticket.Price, reservation.GrandTotal)
 	}
 
 	reservationCharge, err := ChargePayment(reservation)
@@ -95,7 +100,8 @@ func ChargePayment(rsv payment.ReservationsCore) (payment.ReservationsCore, erro
 		tmp[i].Qty = int32(rsv.Tickets[i].Quantity)
 		tmp[i].Price = int64(rsv.Tickets[i].Price)
 	}
-
+	fmt.Println("===========GRAND TOTAL==============")
+	fmt.Println(rsv.GrandTotal)
 	reqTransactions := &coreapi.ChargeReq{
 		PaymentType: coreapi.CoreapiPaymentType(rsv.PaymentType),
 		BankTransfer: &coreapi.BankTransferDetails{
@@ -113,7 +119,7 @@ func ChargePayment(rsv payment.ReservationsCore) (payment.ReservationsCore, erro
 		log.Error("error occured in charging the transaction to midtrans")
 		return payment.ReservationsCore{}, err
 	}
-	rsv.VA = resp.VaNumbers[1].VANumber
+	rsv.VA = resp.VaNumbers[0].VANumber
 	rsv.Status = resp.TransactionStatus
 	rsv.OrderID = resp.OrderID
 
