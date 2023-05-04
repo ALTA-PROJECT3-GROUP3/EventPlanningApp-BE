@@ -8,28 +8,30 @@ import (
 )
 
 type EventResponse struct {
-	ID          uint            `json:"id"`
-	Name        string          `json:"name"`
-	HostName    string          `json:"host_name"`
-	Description string          `json:"description"`
-	Date        string          `json:"date"`
-	Location    string          `json:"location"`
-	IsPaid      bool            `json:"is_paid"`
-	Pictures    string          `json:"pictures"`
-	Tickets     []tRepo.Ticket  `json:"tickets"`
-	Comments    []cRepo.Comment `json:"comments"`
+	ID            uint            `json:"id"`
+	Name          string          `json:"name"`
+	HostName      string          `json:"host_name"`
+	Description   string          `json:"description"`
+	Date          string          `json:"date"`
+	Location      string          `json:"location"`
+	IsPaid        bool            `json:"is_paid"`
+	AttendesQuota int             `json:"attendes_quota"`
+	Pictures      string          `json:"pictures"`
+	Tickets       []tRepo.Ticket  `json:"tickets"`
+	Comments      []cRepo.Comment `json:"comments"`
 }
 
 func CoreToGetAllEventRespB(data event.Core) EventResponse {
 	result := EventResponse{
-		ID:          data.Id,
-		Name:        data.Name,
-		HostName:    data.HostName,
-		Description: data.Description,
-		Date:        data.Date,
-		Location:    data.Location,
-		IsPaid:      false,
-		Pictures:    data.Pictures,
+		ID:            data.Id,
+		Name:          data.Name,
+		HostName:      data.HostName,
+		Description:   data.Description,
+		Date:          data.Date,
+		Location:      data.Location,
+		IsPaid:        false,
+		AttendesQuota: data.AttendesQuota,
+		Pictures:      data.Pictures,
 	}
 
 	for _, v := range data.Tickets {

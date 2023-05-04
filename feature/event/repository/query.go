@@ -62,7 +62,7 @@ func (ev *eventQuery) GetEventById(id uint) (event.Core, error) {
 // MyEvent implements event.Repository
 func (ev *eventQuery) MyEvent(userId uint, limit int, offset int) ([]event.Core, error) {
 	var eventsModel []Event
-	tx := ev.db.Preload("Tickets").Preload("Comments").Limit(limit).Offset(offset).Where("user_id = ?", userId).Select("events.id, events.name, events.host_name, events.description, events.date, events.location, events.is_paid, events.pictures").Joins("JOIN users ON events.user_id = users.id").Group("events.id").Find(&eventsModel)
+	tx := ev.db.Preload("Tickets").Preload("Comments").Limit(limit).Offset(offset).Where("user_id = ?", userId).Select("events.id, events.name, events.host_name, events.description, events.date, events.location, events.is_paid, events.attendes_quota, events.pictures").Joins("JOIN users ON events.user_id = users.id").Group("events.id").Find(&eventsModel)
 	if tx.Error != nil {
 		log.Error("Terjadi error saat select Event")
 		return nil, tx.Error
@@ -75,7 +75,7 @@ func (ev *eventQuery) MyEvent(userId uint, limit int, offset int) ([]event.Core,
 func (ev *eventQuery) SelectAll(limit int, offset int, name string) ([]event.Core, error) {
 	nameSearch := "%" + name + "%"
 	var eventsModel []Event
-	tx := ev.db.Preload("Tickets").Preload("Comments").Limit(limit).Offset(offset).Where("events.name LIKE ?", nameSearch).Select("events.id, events.name, events.host_name, events.description, events.date, events.location, events.is_paid, events.pictures").Joins("JOIN users ON events.user_id = users.id").Group("events.id").Find(&eventsModel)
+	tx := ev.db.Preload("Tickets").Preload("Comments").Limit(limit).Offset(offset).Where("events.name LIKE ?", nameSearch).Select("events.id, events.name, events.host_name, events.description, events.date, events.location, events.is_paid, events.attendes_quota, events.pictures").Joins("JOIN users ON events.user_id = users.id").Group("events.id").Find(&eventsModel)
 	if tx.Error != nil {
 		log.Error("Terjadi error saat select Event")
 		return nil, tx.Error
