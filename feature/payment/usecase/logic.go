@@ -23,6 +23,15 @@ func New(pr payment.Repository) payment.UseCase {
 	}
 }
 
+// UpdateTransaction implements payment.UseCase
+func (pl *paymentLogic) UpdateTransaction(input payment.PaymentCore) error {
+	err := pl.pm.UpdateTransaction(input)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (pl *paymentLogic) CreateReservationLogic(rsv payment.ReservationsCore) (payment.ReservationsCore, error) {
 	var (
 		pay       payment.PaymentCore

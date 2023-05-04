@@ -19,6 +19,18 @@ func New(db *gorm.DB) payment.Repository {
 	}
 }
 
+// UpdateTransaction implements payment.Repository
+func (pm *paymentModel) UpdateTransaction(input payment.PaymentCore) error {
+	cnv := CoreToData(input)
+
+	err := pm.db.Where("order_id = ?", cnv.OrderID).Updates(&cnv)
+	if err != nil {
+		log.Error("query error", err.Error)
+		return errors.New("server error")
+	}
+	return nil
+}
+
 func (pm *paymentModel) CheckEvent(rsv payment.ReservationsCore) error {
 	var count int64
 	if err := pm.db.Raw("SELECT id FROM events WHERE id = ?", rsv.EventID).Count(&count).Error; err != nil {

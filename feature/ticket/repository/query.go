@@ -16,6 +16,11 @@ func New(db *gorm.DB) ticket.Repository {
 	}
 }
 
+// Update implements ticket.Repository
+func (tk *ticketModel) Update(userId uint, id uint, input ticket.Core) error {
+	panic("unimplemented")
+}
+
 // Insert implements ticket.Repository
 func (tc *ticketModel) Insert(input ticket.Core) error {
 	data := CoreToTicket(input)

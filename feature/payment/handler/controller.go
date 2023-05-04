@@ -20,6 +20,26 @@ func New(ps payment.UseCase) payment.Handler {
 	}
 }
 
+// MidtransNotification implements payment.Handler
+func (pc *paymentController) MidtransNotification() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		input := CheckTransactionRequest{}
+		err := c.Bind(&input)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
+		}
+
+		errUpdate := pc.service.UpdateTransaction(checkTransactionRequestToCore(input))
+		if errUpdate != nil {
+			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "error update", nil))
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success get notification from midtrans",
+		})
+	}
+}
+
 func (pc *paymentController) CreateReservationHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		req := new(ReservationRequest)
