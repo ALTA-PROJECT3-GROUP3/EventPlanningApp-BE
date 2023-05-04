@@ -35,7 +35,7 @@ func (ev *eventController) DeleteHandler() echo.HandlerFunc {
 			return errCnv
 		}
 
-		err := ev.service.DeleteBook(userId, uint(eventId))
+		err := ev.service.Delete(userId, uint(eventId))
 		if err != nil {
 			c.Logger().Error("terjadi kesalahan", err.Error())
 			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "terjadi kesalahan Delete Event", nil))

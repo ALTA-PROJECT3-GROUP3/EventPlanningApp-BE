@@ -21,8 +21,8 @@ func New(repo event.Repository) event.UseCase {
 }
 
 // DeleteBook implements event.UseCase
-func (uc *eventLogic) DeleteBook(userId uint, id uint) error {
-	errDelete := uc.data.DeleteBook(userId, id)
+func (uc *eventLogic) Delete(userId uint, id uint) error {
+	errDelete := uc.data.Delete(userId, id)
 	if errDelete != nil {
 		return errDelete
 	}
@@ -92,18 +92,3 @@ func (uc *eventLogic) Add(newEvent event.Core, file *multipart.FileHeader) error
 	}
 	return nil
 }
-
-// if picture != nil {
-// 	file, err := picture.Open()
-// 	if err != nil {
-// 		log.Errorf("error occurs on open picture %v", err)
-// 		return errors.New("error on open picture")
-// 	}
-// 	defer file.Close()
-// 	uploadURL, err := helper.UploadFile(&file, "/users")
-// 	if err != nil {
-// 		log.Errorf("error occurs on uploadFile in path %v", err)
-// 		return errors.New("error on upload file in path")
-// 	}
-// 	UpdateUser.Picture = uploadURL[0]
-// }

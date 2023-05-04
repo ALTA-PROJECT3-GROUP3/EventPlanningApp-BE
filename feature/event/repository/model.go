@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/comment"
 	cRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/comment/repository"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket"
@@ -21,14 +22,6 @@ type Event struct {
 	Tickets     []tRepo.Ticket
 	Comments    []cRepo.Comment
 }
-
-// type Ticket struct {
-// 	gorm.Model
-// 	Name    string `gorm:"type:varchar(50);not null"`
-// 	Quota   int    `gorm:"not null"`
-// 	Price   int    `gorm:"not null"`
-// 	EventID uint
-// }
 
 func CoreToEvent(data event.Core) Event {
 	return Event{
@@ -66,6 +59,15 @@ func EventToCore(data Event) event.Core {
 			EventID: v.EventID,
 		}
 		result.Tickets = append(result.Tickets, cticket)
+	}
+
+	for _, y := range data.Comments {
+		cComment := comment.Core{
+			UserID:  y.UserID,
+			EventID: y.EventID,
+			Comment: y.Text,
+		}
+		result.Comments = append(result.Comments, cComment)
 	}
 	return result
 }

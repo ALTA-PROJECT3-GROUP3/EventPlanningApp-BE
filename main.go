@@ -19,6 +19,10 @@ import (
 	eHandler "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event/handler"
 	eRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event/repository"
 	eLogic "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event/usecase"
+
+	tHandler "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket/handler"
+	tRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket/repository"
+	tLogic "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket/usecase"
 )
 
 func main() {
@@ -43,10 +47,15 @@ func main() {
 	eSrv := eLogic.New(eMdl)
 	eCtl := eHandler.New(eSrv)
 
+	tMdl := tRepo.New(db)
+	tSrv := tLogic.New(tMdl)
+	tCtl := tHandler.New(tSrv)
+
 	routes.UserRoutes(e, uCtl)
 	routes.CommentRoutes(e, commentCtl)
 	routes.PaymentRoutes(e, PaymentCtl)
 	routes.EventRoutes(e, eCtl)
+	routes.TicketRoutes(e, tCtl)
 
 	if err := e.Start(":8080"); err != nil {
 		e.Logger.Fatal("cannot start server", err.Error())

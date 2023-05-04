@@ -34,7 +34,7 @@ func (ch *commentHandler) CreateCommentHandler() echo.HandlerFunc {
 			c.Logger().Error("error on binding request create comment")
 			return c.JSON(helper.ResponseFormat(http.StatusBadRequest, "invalid user indput", nil))
 		}
-
+		// return c.JSON(helper.ResponseFormat(http.StatusBadRequest, strconv.Itoa(int(request.EventID)), nil))
 		newComment.UserID = userID
 		newComment.EventID = request.EventID
 		newComment.Comment = request.Comment

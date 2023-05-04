@@ -19,7 +19,7 @@ func New(db *gorm.DB) event.Repository {
 }
 
 // DeleteBook implements event.Repository
-func (ev *eventQuery) DeleteBook(userId uint, id uint) error {
+func (ev *eventQuery) Delete(userId uint, id uint) error {
 	tx := ev.db.Where("user_id = ?", userId).Delete(&Event{}, id)
 	if tx.RowsAffected < 1 {
 		log.Error("Terjadi error")
@@ -75,9 +75,9 @@ func (ev *eventQuery) MyEvent(userId uint, limit int, offset int) ([]event.Core,
 func (ev *eventQuery) SelectAll(limit int, offset int, name string) ([]event.Core, error) {
 	nameSearch := "%" + name + "%"
 	var eventsModel []Event
-	tx := ev.db.Limit(limit).Offset(offset).Where("events.name LIKE ?", nameSearch).Select("events.id, events.name, events.host_name, events.description, events.date, events.location, events.is_paid, events.pictures").Joins("JOIN users ON events.user_id = users.id").Group("events.id").Find(&eventsModel)
+	tx := ev.db.Preload("Tickets").Preload("Comments").Limit(limit).Offset(offset).Where("events.name LIKE ?", nameSearch).Select("events.id, events.name, events.host_name, events.description, events.date, events.location, events.is_paid, events.pictures").Joins("JOIN users ON events.user_id = users.id").Group("events.id").Find(&eventsModel)
 	if tx.Error != nil {
-		log.Error("Terjadi error saat select Book")
+		log.Error("Terjadi error saat select Event")
 		return nil, tx.Error
 	}
 	eventsCoreAll := ListModelToCore(eventsModel)

@@ -3,6 +3,7 @@ package event
 import (
 	"mime/multipart"
 
+	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/comment"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket"
 	"github.com/labstack/echo/v4"
 )
@@ -18,15 +19,8 @@ type Core struct {
 	Pictures    string
 	UserID      uint
 	Tickets     []ticket.Core
+	Comments    []comment.Core
 }
-
-// type Ticket struct {
-// 	Id      uint
-// 	Name    string
-// 	Quota   int
-// 	Price   int
-// 	EventID uint
-// }
 
 type Handler interface {
 	AddHandler() echo.HandlerFunc
@@ -43,7 +37,7 @@ type UseCase interface {
 	MyEvent(userId uint, page int) ([]Core, error)
 	GetEventById(id uint) (Core, error)
 	Update(userId uint, id uint, updateEvent Core, file *multipart.FileHeader) error
-	DeleteBook(userId uint, id uint) error
+	Delete(userId uint, id uint) error
 }
 
 type Repository interface {
@@ -52,5 +46,5 @@ type Repository interface {
 	MyEvent(userId uint, limit, offset int) ([]Core, error)
 	GetEventById(id uint) (Core, error)
 	Update(userId uint, id uint, input Core) error
-	DeleteBook(userId uint, id uint) error
+	Delete(userId uint, id uint) error
 }
