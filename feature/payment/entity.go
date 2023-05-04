@@ -56,7 +56,7 @@ type Handler interface {
 
 type UseCase interface {
 	CreateReservationLogic(ReservationsCore) (ReservationsCore, error)
-	UpdateTransaction(input PaymentCore) error
+	UpdateTransaction(input ReservationsCore) error
 }
 
 type Repository interface {
@@ -64,5 +64,5 @@ type Repository interface {
 	CheckTicket(ReservationsCore) (ReservationsCore, error)
 	InsertPayment(PaymentCore) error
 	InsertPaymentDetails(PaymentDetailCore) error
-	UpdateTransaction(input PaymentCore) error
+	UpdateTransaction(input ReservationsCore) error
 }

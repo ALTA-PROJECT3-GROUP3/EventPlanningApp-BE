@@ -20,8 +20,8 @@ type CheckTransactionRequest struct {
 	Status  string `json:"status" form:"status"`
 }
 
-func checkTransactionRequestToCore(data CheckTransactionRequest) payment.PaymentCore {
-	return payment.PaymentCore{
+func checkTransactionRequestToCore(data CheckTransactionRequest) payment.ReservationsCore {
+	return payment.ReservationsCore{
 		OrderID: data.OrderID,
 		Status:  data.Status,
 	}

@@ -20,7 +20,7 @@ func New(db *gorm.DB) payment.Repository {
 }
 
 // UpdateTransaction implements payment.Repository
-func (pm *paymentModel) UpdateTransaction(input payment.PaymentCore) error {
+func (pm *paymentModel) UpdateTransaction(input payment.ReservationsCore) error {
 	cnv := CoreToData(input)
 
 	err := pm.db.Where("order_id = ?", cnv.OrderID).Updates(&cnv)
