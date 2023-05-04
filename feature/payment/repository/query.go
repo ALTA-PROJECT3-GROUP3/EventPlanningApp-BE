@@ -23,10 +23,9 @@ func New(db *gorm.DB) payment.Repository {
 func (pm *paymentModel) UpdateTransaction(input payment.ReservationsCore) error {
 	cnv := CoreToData(input)
 
-	err := pm.db.Where("order_id = ?", cnv.OrderID).Updates(&cnv)
+	err := pm.db.Where("order_id = ?", input.OrderID).Updates(cnv)
 	if err != nil {
-		log.Error("query error", err.Error)
-		return errors.New("server error")
+		return err.Error
 	}
 	return nil
 }

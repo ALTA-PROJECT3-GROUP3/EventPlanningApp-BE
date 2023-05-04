@@ -29,7 +29,9 @@ func (pc *paymentController) MidtransNotification() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
 		}
 
-		errUpdate := pc.service.UpdateTransaction(checkTransactionRequestToCore(input))
+		update := checkTransactionRequestToCore(input)
+		update.Status = input.Status
+		errUpdate := pc.service.UpdateTransaction(update)
 		if errUpdate != nil {
 			return c.JSON(helper.ResponseFormat(http.StatusInternalServerError, "error update", nil))
 		}
