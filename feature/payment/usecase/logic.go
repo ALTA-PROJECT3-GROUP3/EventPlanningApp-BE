@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -39,8 +40,8 @@ func (pl *paymentLogic) CreateReservationLogic(rsv payment.ReservationsCore) (pa
 		return payment.ReservationsCore{}, err
 	}
 
-	//quota
 	for _, ticket := range reservation.Tickets {
+		fmt.Println(reservation.Tickets)
 		if ticket.Quota < ticket.Quantity {
 			log.Printf("ticket quota is %d, and quantity to buy is %d ticket are out of quota", ticket.Quota, ticket.Quantity)
 			return payment.ReservationsCore{}, errors.New("out of quota")
@@ -61,7 +62,7 @@ func (pl *paymentLogic) CreateReservationLogic(rsv payment.ReservationsCore) (pa
 	pay.OrderID = reservationCharge.OrderID
 	pay.VA = reservationCharge.VA
 	pay.Bank = reservationCharge.Bank
-	
+
 	if err := pl.pm.InsertPayment(pay); err != nil {
 		log.Error("error occured in inserting payment")
 		return payment.ReservationsCore{}, err

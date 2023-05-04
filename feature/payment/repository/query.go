@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment"
 	"github.com/labstack/gommon/log"
@@ -36,30 +37,16 @@ func (pm *paymentModel) CheckEvent(rsv payment.ReservationsCore) error {
 func (pm *paymentModel) CheckTicket(rsv payment.ReservationsCore) (payment.ReservationsCore, error) {
 	var (
 		count    int64
-		ticketDB struct {
-			TicketID uint
-			Name     string
-			Quota    int
-			Price    int
-			EventID  uint
-		}
+		ticketDB payment.Tickets
 	)
-
-	type addTicket struct {
-		TicketID uint
-		Name     string
-		Quantity int
-		Quota    int
-		Price    int
-	}
 
 	for _, ticket := range rsv.Tickets {
 		if err := pm.db.Raw("SELECT id, name, quota, price, event_id FROM tickets WHERE id = ? AND event_id = ?", ticket.TicketID, rsv.EventID).Scan(&ticketDB).Count(&count).Error; err != nil {
 			log.Error("error occurred in finding tickets for reservations")
 			return rsv, err
 		}
-
-		rsv.Tickets = append(rsv.Tickets, addTicket{
+		fmt.Println(ticketDB)
+		rsv.Tickets = append(rsv.Tickets, payment.Tickets{
 			TicketID: ticketDB.TicketID,
 			Name:     ticketDB.Name,
 			Quantity: ticket.Quantity,
@@ -67,7 +54,7 @@ func (pm *paymentModel) CheckTicket(rsv payment.ReservationsCore) (payment.Reser
 			Price:    ticketDB.Price,
 		})
 	}
-
+	fmt.Printf("rsv ticket %v", rsv.Tickets)
 	return rsv, nil
 }
 

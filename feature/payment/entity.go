@@ -7,15 +7,15 @@ import (
 )
 
 type PaymentCore struct {
-	ID            uint
+	ID          uint
 	PaymentType string
-	Bank          string
-	UserID        uint
-	OrderID       string
-	VA            string
-	Status        string
-	GrandTotal    int
-	PaymentDate   time.Time
+	Bank        string
+	UserID      uint
+	OrderID     string
+	VA          string
+	Status      string
+	GrandTotal  int
+	PaymentDate time.Time
 }
 
 type PaymentDetailCore struct {
@@ -27,23 +27,25 @@ type PaymentDetailCore struct {
 }
 
 type ReservationsCore struct {
-	PaymentID     uint
-	UserID        uint
-	EventID       uint
-	OrderID       string
-	PhoneNumber   string
+	PaymentID   uint
+	UserID      uint
+	EventID     uint
+	OrderID     string
+	PhoneNumber string
 	PaymentType string
-	Bank          string
-	VA            string
-	Status        string
-	Tickets       []struct {
-		TicketID uint
-		Name     string
-		Quantity int
-		Quota    int
-		Price    int
-	}
-	GrandTotal int
+	Bank        string
+	VA          string
+	Status      string
+	Tickets     []Tickets
+	GrandTotal  int
+}
+
+type Tickets struct {
+	TicketID uint
+	Name     string
+	Quantity int
+	Quota    int
+	Price    int
 }
 
 type Handler interface {

@@ -96,13 +96,13 @@ func ReadEnv() *AppConfig {
 			return nil
 		}
 
-		app.DBUSER = viper.Get("DB_USER").(string)
-		app.DBPASSWORD = viper.Get("DB_PASS").(string)
-		app.DBHOST = viper.Get("DB_HOST").(string)
-		app.DBPORT, _ = viper.Get("DB_HOST").(string)
-		app.DBNAME = viper.Get("DB_NAME").(string)
+		app.DBUSER = viper.Get("DBUSER").(string)
+		app.DBPASSWORD = viper.Get("DBPASSWORD").(string)
+		app.DBHOST = viper.Get("DBHOST").(string)
+		app.DBPORT, _ = viper.Get("DBPORT").(string)
+		app.DBNAME = viper.Get("DBNAME").(string)
 
-		JWTKEY = viper.Get("JWT_KEY").(string)
+		JWTKEY = viper.Get("JWT_SECRET").(string)
 
 		CloudinaryName = viper.Get("CLOUDINARY_CLOUD_NAME").(string)
 		CloudinaryApiKey = viper.Get("CLOUDINARY_API_KEY").(string)

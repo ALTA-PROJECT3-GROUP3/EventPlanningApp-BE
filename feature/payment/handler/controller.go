@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/payment"
@@ -39,10 +40,15 @@ func (pc *paymentController) CreateReservationHandler() echo.HandlerFunc {
 		reservation.PaymentType = req.PaymentMethod
 
 		for i := 0; i < len(req.Tickets); i++ {
-			reservation.Tickets[i].TicketID = req.Tickets[i].TicketID
-			reservation.Tickets[i].Quantity = req.Tickets[i].Quantity
+			fmt.Println(req.Tickets)
+			fmt.Println(len(reservation.Tickets))
+			tmp := payment.Tickets{
+				TicketID: req.Tickets[i].TicketID,
+				Quantity: req.Tickets[i].Quantity,
+			}
+			reservation.Tickets = append(reservation.Tickets, tmp)
 		}
-
+		
 		res, err := pc.service.CreateReservationLogic(reservation)
 		if err != nil {
 			c.Logger().Error("error on calling reservationlogic")
