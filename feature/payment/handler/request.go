@@ -17,7 +17,7 @@ type ReservationItem struct {
 
 type CheckTransactionRequest struct {
 	OrderID string `json:"order_id" form:"order_id"`
-	Status  string `json:"status" form:"status"`
+	Status  string `json:"transaction_status" form:"transaction_status"`
 }
 
 func checkTransactionRequestToCore(data CheckTransactionRequest) payment.ReservationsCore {
