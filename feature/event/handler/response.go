@@ -1,35 +1,58 @@
 package handler
 
 import (
-	"time"
-
+	cRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/comment/repository"
 	"github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/event"
+	tRepo "github.com/ALTA-PROJECT3-GROUP3/EventPlanningApp-BE/feature/ticket/repository"
+	"gorm.io/gorm"
 )
 
 type EventResponse struct {
-	ID          uint      `json:"id"`
-	Name        string    `json:"name"`
-	HostName    string    `json:"host_name"`
-	Description string    `json:"description"`
-	Date        time.Time `json:"date"`
-	Location    string    `json:"location"`
-	IsPaid      bool      `json:"is_paid"`
-	Pictures    string    `json:"pictures"`
-	UserID      uint      `json:"user_id"`
+	ID          uint            `json:"id"`
+	Name        string          `json:"name"`
+	HostName    string          `json:"host_name"`
+	Description string          `json:"description"`
+	Date        string          `json:"date"`
+	Location    string          `json:"location"`
+	IsPaid      bool            `json:"is_paid"`
+	Pictures    string          `json:"pictures"`
+	Tickets     []tRepo.Ticket  `json:"tickets"`
+	Comments    []cRepo.Comment `json:"comments"`
 }
 
 func CoreToGetAllEventRespB(data event.Core) EventResponse {
-	return EventResponse{
+	result := EventResponse{
 		ID:          data.Id,
 		Name:        data.Name,
 		HostName:    data.HostName,
 		Description: data.Description,
-		Date:        time.Time{},
+		Date:        data.Date,
 		Location:    data.Location,
 		IsPaid:      false,
 		Pictures:    data.Pictures,
-		UserID:      data.UserID,
 	}
+
+	for _, v := range data.Tickets {
+		cticket := tRepo.Ticket{
+			Model:   gorm.Model{ID: v.Id},
+			Name:    v.Name,
+			Quota:   v.Quota,
+			Price:   v.Price,
+			EventID: v.EventID,
+			UserID:  v.UserID,
+		}
+		result.Tickets = append(result.Tickets, cticket)
+	}
+
+	for _, y := range data.Comments {
+		cComment := cRepo.Comment{
+			UserID:  y.UserID,
+			EventID: y.EventID,
+			Text:    y.Comment,
+		}
+		result.Comments = append(result.Comments, cComment)
+	}
+	return result
 }
 
 func CoreToGetAllEventResp(data []event.Core) []EventResponse {
