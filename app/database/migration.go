@@ -10,10 +10,10 @@ import (
 )
 
 func Migrate(db *gorm.DB) {
-	db.AutoMigrate(&uRepo.User{})
-	db.AutoMigrate(&eRepo.Event{})
-	db.AutoMigrate(&tRepo.Ticket{})
-	db.AutoMigrate(&pRepo.PaymentDetail{})
-	db.AutoMigrate(&pRepo.Payment{})
-	db.AutoMigrate(&cRepo.Comment{})
+	db.AutoMigrate(uRepo.User{})
+	db.AutoMigrate(eRepo.Event{})
+	db.AutoMigrate(tRepo.Ticket{})
+	db.AutoMigrate(pRepo.PaymentDetail{})
+	db.AutoMigrate(pRepo.Payment{})
+	db.AutoMigrate(cRepo.Comment{})
 }
